@@ -45,6 +45,16 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Docker
+
+```bash
+# allow run entrypoint.sh
+$ chmod +x .docker/entrypoint.sh
+
+# run docker
+$ docker-compose up
+```
+
 ## Test
 
 ```bash

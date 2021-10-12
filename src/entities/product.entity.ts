@@ -1,21 +1,18 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
-  JoinTable,
   OneToMany,
   PrimaryGeneratedColumn,
   Unique,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Rate } from './rate.entity';
 
 @Entity()
 export class Product {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('increment')
   id: number;
-
-  @OneToMany(() => Rate, (rate) => rate.product, { cascade: true })
-  @JoinTable()
-  rates: Rate[];
 
   @Column()
   @Unique('idx-product-name', ['name'])
@@ -26,4 +23,17 @@ export class Product {
 
   @Column({ type: 'decimal' })
   price: number;
+
+  @CreateDateColumn({ type: 'timestamp', default: 'CURRENT_TIMESTAMP' })
+  created_at: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', default: 'CURRENT_TIMESTAMP' })
+  updated_at: Date;
+
+  /**
+   * @RELATIONS
+   */
+
+  @OneToMany(() => Rate, (rate) => rate.product, { cascade: true })
+  rates: Rate[];
 }

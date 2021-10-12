@@ -50,6 +50,10 @@ export class ProductService {
     return this.save(product);
   }
 
+  /**
+   * @param  {ProductCreateDto | ProductUpdateDto} product
+   * @returns {Promise<Product>}
+   */
   private save(product: ProductCreateDto | ProductUpdateDto) {
     return this.productRepository.save(product);
   }

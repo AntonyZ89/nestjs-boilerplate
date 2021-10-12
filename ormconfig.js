@@ -1,12 +1,14 @@
 module.exports = {
   type: 'postgres',
-  host: 'localhost',
+  host: 'db',
   port: 5432,
   username: 'postgres',
   password: 'docker',
-  database: 'postgres',
+  database: 'nestjs-template',
   entities: ['dist/entities/*.entity.js'],
   migrations: ['dist/migrations/*.js'],
+  synchronize: false,
+  autoLoadEntities: false,
   cli: {
     migrationsDir: 'src/migrations',
   },
