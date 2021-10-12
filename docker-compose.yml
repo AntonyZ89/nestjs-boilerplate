@@ -4,7 +4,7 @@ services:
   app:
     build: .
     entrypoint: .docker/entrypoint.sh
-    container_name: cursonestjs-app
+    container_name: nestjs-app
     ports:
       - "3001:3000"
     volumes:
@@ -14,7 +14,7 @@ services:
 
   db:
     build: .docker/postgres
-    container_name: cursonestjs-db
+    container_name: nestjs-db
     restart: always
     tty: true
     ports:
@@ -23,11 +23,11 @@ services:
       - .docker/dbdata:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=cursonestjs
+      - POSTGRES_DB=nestjs
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: cursonestjs-pgadmin
+    container_name: nestjs-pgadmin
     tty: true
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com

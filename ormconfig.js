@@ -4,7 +4,7 @@ module.exports = {
   port: 5432,
   username: 'postgres',
   password: 'docker',
-  database: 'nestjs-template',
+  database: 'nestjs',
   entities: ['dist/entities/*.entity.js'],
   migrations: ['dist/migrations/*.js'],
   synchronize: false,
