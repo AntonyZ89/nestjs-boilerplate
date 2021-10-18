@@ -1,8 +1,8 @@
+import { RateCreateDto } from '../../dto/rate-create.dto';
+import { RateUpdateDto } from '../../dto/rate-update.dto';
+import { Rate } from '../../entities/rate.entity';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RateCreateDto } from 'src/dto/rate-create.dto';
-import { RateUpdateDto } from 'src/dto/rate-update.dto';
-import { Rate } from 'src/entities/rate.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

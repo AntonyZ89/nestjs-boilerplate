@@ -1,18 +1,14 @@
+import { Product } from './entities/product.entity';
+import { Rate } from './entities/rate.entity';
+import { ProductModule } from './modules/product/product.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProductModule } from './product/product.module';
-import { Product } from './entities/product.entity';
-import { ProductController } from './product/product.controller';
-import { ProductService } from './product/product.service';
-import { Rate } from './entities/rate.entity';
-import { RateController } from './rate/rate.controller';
-import { RateService } from './rate/rate.service';
+import { RateModule } from './modules/rate/rate.module';
 
 @Module({
   imports: [
-    ProductModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'db',
@@ -25,9 +21,10 @@ import { RateService } from './rate/rate.service';
       synchronize: false,
       autoLoadEntities: false,
     }),
-    TypeOrmModule.forFeature([Product, Rate]),
+    ProductModule,
+    RateModule,
   ],
-  controllers: [AppController, ProductController, RateController],
-  providers: [AppService, RateService, ProductService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
