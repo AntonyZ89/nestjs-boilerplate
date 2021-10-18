@@ -7,7 +7,8 @@ import {
   Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { Rate } from '@entities';
+import { Rate } from './rate.entity';
+
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn('increment')

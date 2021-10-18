@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Product } from '@entities';
+import { Product } from './product.entity';
 
 @Entity()
 export class Rate {

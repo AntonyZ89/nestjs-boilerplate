@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
-import { RateCreateDto, RateUpdateDto } from '@dto';
-import { RateService } from '@modules/rate';
+import { RateCreateDto } from 'src/dto/rate-create.dto';
+import { RateUpdateDto } from 'src/dto/rate-update.dto';
+import { RateService } from './rate.service';
 
 @Controller('rate')
 export class RateController {
