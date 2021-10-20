@@ -2,7 +2,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinTable,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -24,16 +23,15 @@ export class Rate {
   observation?: string;
 
   @CreateDateColumn({ type: 'timestamp', default: 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp', default: 'CURRENT_TIMESTAMP' })
-  updated_at: Date;
+  updatedAt: Date;
 
   /**
    * @RELATIONS
    */
 
-  @JoinTable({ name: 'product' })
   @ManyToOne(() => Product, (product) => product.rates, {
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',

@@ -396,3 +396,8 @@ Temporary Items
 # Local
 .env
 dist
+yarn.lock
+
+# pem
+private-key.pem
+public-key.pem

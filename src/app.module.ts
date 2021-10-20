@@ -1,28 +1,23 @@
-import { Product } from './entities/product.entity';
-import { Rate } from './entities/rate.entity';
-import { ProductModule } from './modules/product/product.module';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import config from './config/config';
+import { AuthModule } from './modules/auth/auth.module';
+import { ProductModule } from './modules/product/product.module';
 import { RateModule } from './modules/rate/rate.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'db',
-      port: 5432,
-      username: 'postgres',
-      password: 'docker',
-      database: 'nestjs',
-      entities: ['dist/entities/*.entity.js'],
-      migrations: ['src/migrations/*.js'],
-      synchronize: false,
-      autoLoadEntities: false,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [config],
     }),
+    TypeOrmModule.forRoot(),
     ProductModule,
     RateModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],

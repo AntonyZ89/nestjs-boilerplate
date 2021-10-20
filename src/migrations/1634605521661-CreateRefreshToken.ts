@@ -5,11 +5,11 @@ import {
   TableForeignKey,
 } from 'typeorm';
 
-export class CreateRateTable1633836157304 implements MigrationInterface {
+export class CreateRefreshToken1634605521661 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'rate',
+        name: 'refresh_token',
         columns: [
           {
             name: 'id',
@@ -19,17 +19,16 @@ export class CreateRateTable1633836157304 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'productId',
+            name: 'userId',
             type: 'int',
           },
           {
-            name: 'rate',
-            type: 'smallint',
+            name: 'revoked',
+            type: 'boolean',
           },
           {
-            name: 'observation',
-            type: 'text',
-            isNullable: true,
+            name: 'expires',
+            type: 'timestamp',
           },
           {
             name: 'createdAt',
@@ -46,18 +45,17 @@ export class CreateRateTable1633836157304 implements MigrationInterface {
     );
 
     await queryRunner.createForeignKey(
-      'rate',
+      'refresh_token',
       new TableForeignKey({
-        name: 'fk-rate-productId',
-        columnNames: ['productId'],
-        referencedTableName: 'product',
+        name: 'fk-refresh_token-userId',
+        columnNames: ['userId'],
+        referencedTableName: 'user',
         referencedColumnNames: ['id'],
       }),
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('rate', 'fk-rate-productId');
-    await queryRunner.dropTable('rate');
+    await queryRunner.dropTable('refresh_token');
   }
 }

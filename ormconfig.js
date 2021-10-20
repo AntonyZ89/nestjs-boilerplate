@@ -5,11 +5,15 @@ module.exports = {
   username: 'postgres',
   password: 'docker',
   database: 'nestjs',
-  entities: ['dist/entities/*.entity.js'],
-  migrations: ['dist/migrations/*.js'],
   synchronize: false,
-  autoLoadEntities: false,
-  cli: {
-    migrationsDir: 'src/migrations',
-  },
+    entities: [
+        "dist/entities/**/*.entity.js"
+    ],
+    migrations: [
+        "dist/migrations/**/*.js"
+    ],
+    cli: {
+        "entitiesDir": "src/entities",
+        "migrationsDir": "src/migrations"
+    }
 };
