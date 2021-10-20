@@ -29,12 +29,7 @@ import { TokenService } from './token.service';
       inject: [ConfigService],
     }),
     ConfigService,
-    TypeOrmModule.forFeature([
-      User,
-      UserRepository,
-      RefreshToken,
-      RefreshTokenRepository,
-    ]),
+    TypeOrmModule.forFeature([User, UserRepository, RefreshToken, RefreshTokenRepository]),
   ],
   providers: [AuthService, TokenService],
   controllers: [AuthController],

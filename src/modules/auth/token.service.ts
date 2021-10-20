@@ -33,14 +33,8 @@ export class TokenService {
     return this.jwtService.sign({}, opts);
   }
 
-  public async generateRefreshToken(
-    user: User,
-    expiresIn: number,
-  ): Promise<string> {
-    const token = await this.tokenRepository.createRefreshToken(
-      user,
-      expiresIn,
-    );
+  public async generateRefreshToken(user: User, expiresIn: number): Promise<string> {
+    const token = await this.tokenRepository.createRefreshToken(user, expiresIn);
 
     const opts: SignOptions = {
       ...BASE_OPTIONS,
@@ -52,9 +46,7 @@ export class TokenService {
     return this.jwtService.sign({}, opts);
   }
 
-  public async resolveRefreshToken(
-    encoded: string,
-  ): Promise<{ user: User; token: RefreshToken }> {
+  public async resolveRefreshToken(encoded: string): Promise<{ user: User; token: RefreshToken }> {
     const payload = await this.decodeRefreshToken(encoded);
     const token = await this.getStoredTokenFromRefreshTokenPayload(payload);
 
@@ -75,9 +67,7 @@ export class TokenService {
     return { user, token };
   }
 
-  public async createAccessTokenFromRefreshToken(
-    refresh: string,
-  ): Promise<{ token: string; user: User }> {
+  public async createAccessTokenFromRefreshToken(refresh: string): Promise<{ token: string; user: User }> {
     const { user } = await this.resolveRefreshToken(refresh);
 
     const token = await this.generateAccessToken(user);
@@ -97,9 +87,7 @@ export class TokenService {
     }
   }
 
-  private getUserFromRefreshTokenPayload(
-    payload: RefreshTokenPayload,
-  ): Promise<User> {
+  private getUserFromRefreshTokenPayload(payload: RefreshTokenPayload): Promise<User> {
     const subId = payload.sub;
 
     if (!subId) {
@@ -109,9 +97,7 @@ export class TokenService {
     return this.userRepository.findOne(subId);
   }
 
-  private getStoredTokenFromRefreshTokenPayload(
-    payload: RefreshTokenPayload,
-  ): Promise<RefreshToken | undefined> {
+  private getStoredTokenFromRefreshTokenPayload(payload: RefreshTokenPayload): Promise<RefreshToken | undefined> {
     const tokenId = payload.jti;
 
     if (!tokenId) {

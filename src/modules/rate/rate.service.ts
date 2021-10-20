@@ -7,9 +7,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class RateService {
-  constructor(
-    @InjectRepository(Rate) private readonly rateRepository: Repository<Rate>,
-  ) {}
+  constructor(@InjectRepository(Rate) private readonly rateRepository: Repository<Rate>) {}
 
   all() {
     return this.rateRepository.find();

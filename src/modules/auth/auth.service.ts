@@ -46,9 +46,7 @@ export class AuthService {
           msg: {
             email: body.email,
             type: 'bearer',
-            access_token: await this.tokenService.generateAccessToken(
-              userDetails,
-            ),
+            access_token: await this.tokenService.generateAccessToken(userDetails),
             refresh_token: await this.tokenService.generateRefreshToken(
               userDetails,
               this.configService.get<number>('keys.expiresIn'),
