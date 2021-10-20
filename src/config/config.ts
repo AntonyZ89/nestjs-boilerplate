@@ -1,8 +1,8 @@
-enum times {
-  d = 24 * 60 * 60,
-  m = 60 * 60,
-  s = 60,
-}
+const TIMES: { [key: string]: number } = {
+  d: 24 * 60 * 60,
+  m: 60 * 60,
+  s: 60,
+};
 
 export default () => {
   // converts "30d" to ["30", "d"]
@@ -15,7 +15,7 @@ export default () => {
     keys: {
       privateKey: process.env.PRIVATE_KEY,
       publicKey: process.env.PUBLIC_KEY,
-      expiresIn: time * times[type],
+      expiresIn: time * TIMES[type],
     },
   };
 };

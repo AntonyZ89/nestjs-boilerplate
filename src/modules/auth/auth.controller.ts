@@ -1,20 +1,14 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
 import * as moment from 'moment';
 import { RefreshTokenRefreshDTO } from 'src/dto/refreshToken-refresh.dto';
 import { UserLoginDTO } from 'src/dto/user-login.dto';
-import { User } from 'src/entities/user.entity';
+import { UserRepository } from 'src/repositories/user.repository';
 import { AuthService } from './auth.service';
+import { AuthRequest } from './interface/request.auth';
+import { JwtAuthGuard } from './strategy/jwt-auth.guard';
 import { TokenService } from './token.service';
-
-export interface AuthenticationPayload {
-  user: User;
-  payload: {
-    type: string;
-    token: string;
-    refresh_token?: string;
-  };
-}
 
 @Controller('auth')
 export class AuthController {
@@ -22,17 +16,26 @@ export class AuthController {
     private authService: AuthService,
     private configService: ConfigService,
     private tokenService: TokenService,
+    private userRepository: UserRepository,
   ) {}
 
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  async me(@Req() req: AuthRequest) {
+    const userId = req.user.id;
+
+    return await this.userRepository.findOne(userId);
+  }
+
   @Post('login')
-  async login(@Res() res, @Body() body: UserLoginDTO) {
+  async login(@Res() res: Response, @Body() body: UserLoginDTO) {
     const auth = await this.authService.login(body);
 
     res.status(auth.status).json(auth.msg);
   }
 
   @Post('register')
-  async register(@Res() res, @Body() body: UserLoginDTO) {
+  async register(@Res() res: Response, @Body() body: UserLoginDTO) {
     const auth = await this.authService.register(body);
     res.status(auth.status).json(auth.content);
   }

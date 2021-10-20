@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { validate } from 'class-validator';
@@ -15,7 +15,7 @@ export class AuthService {
     private readonly tokenService: TokenService,
   ) {}
 
-  async login(body: UserLoginDTO): Promise<Record<string, any>> {
+  async login(body: UserLoginDTO): Promise<{ status: HttpStatus; msg: any }> {
     // Validation Flag
     let isOk = true;
 
@@ -34,7 +34,7 @@ export class AuthService {
       });
 
       if (!userDetails) {
-        return { status: 401, msg: { msg: 'Invalid credentials' } };
+        return { status: HttpStatus.UNAUTHORIZED, msg: { msg: 'Invalid credentials' } };
       }
 
       // Check if the given password match with saved password
@@ -57,10 +57,10 @@ export class AuthService {
           },
         };
       } else {
-        return { status: 401, msg: { msg: 'Invalid credentials' } };
+        return { status: HttpStatus.UNAUTHORIZED, msg: { msg: 'Invalid credentials' } };
       }
     } else {
-      return { status: 400, msg: { msg: 'Invalid fields.' } };
+      return { status: HttpStatus.BAD_REQUEST, msg: { msg: 'Invalid fields.' } };
     }
   }
 
@@ -84,12 +84,12 @@ export class AuthService {
       });
 
       if (isOk) {
-        return { status: 201, content: { msg: `User created with success` } };
+        return { status: HttpStatus.CREATED, content: { msg: `User created with success` } };
       } else {
-        return { status: 400, content: { msg: 'User already exists' } };
+        return { status: HttpStatus.BAD_REQUEST, content: { msg: 'User already exists' } };
       }
     } else {
-      return { status: 400, content: { msg: 'Invalid content' } };
+      return { status: HttpStatus.BAD_REQUEST, content: { msg: 'Invalid content' } };
     }
   }
 }
