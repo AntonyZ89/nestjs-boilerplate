@@ -6,7 +6,7 @@ import { RefreshTokenRefreshDTO } from 'src/dto/refreshToken-refresh.dto';
 import { UserLoginDTO } from 'src/dto/user-login.dto';
 import { UserRepository } from 'src/repositories/user.repository';
 import { AuthService } from './auth.service';
-import { AuthRequest } from './interface/request.auth';
+import { AuthRequest } from './interface/auth.request.interface';
 import { JwtAuthGuard } from './strategy/jwt-auth.guard';
 import { TokenService } from './token.service';
 
@@ -31,13 +31,13 @@ export class AuthController {
   async login(@Res() res: Response, @Body() body: UserLoginDTO) {
     const auth = await this.authService.login(body);
 
-    res.status(auth.status).json(auth.msg);
+    res.status(auth.status).json(auth.message);
   }
 
   @Post('register')
   async register(@Res() res: Response, @Body() body: UserLoginDTO) {
     const auth = await this.authService.register(body);
-    res.status(auth.status).json(auth.content);
+    res.status(auth.status).json(auth.message);
   }
 
   @Post('refresh')

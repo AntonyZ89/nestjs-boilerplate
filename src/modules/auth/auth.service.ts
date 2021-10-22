@@ -5,6 +5,7 @@ import { validate } from 'class-validator';
 import * as moment from 'moment';
 import { UserRepository } from 'src/repositories/user.repository';
 import { UserLoginDTO } from '../../dto/user-login.dto';
+import { AuthResult } from './interface/auth.result.interface';
 import { TokenService } from './token.service';
 
 @Injectable()
@@ -15,7 +16,7 @@ export class AuthService {
     private readonly tokenService: TokenService,
   ) {}
 
-  async login(body: UserLoginDTO): Promise<{ status: HttpStatus; msg: any }> {
+  async login(body: UserLoginDTO): Promise<AuthResult> {
     // Validation Flag
     let isOk = true;
 
@@ -34,7 +35,7 @@ export class AuthService {
       });
 
       if (!userDetails) {
-        return { status: HttpStatus.UNAUTHORIZED, msg: { msg: 'Invalid credentials' } };
+        return { status: HttpStatus.UNAUTHORIZED, message: { msg: 'Invalid credentials' } };
       }
 
       // Check if the given password match with saved password
@@ -43,7 +44,7 @@ export class AuthService {
       if (isValid) {
         return {
           status: 200,
-          msg: {
+          message: {
             email: body.email,
             type: 'bearer',
             access_token: await this.tokenService.generateAccessToken(userDetails),
@@ -57,39 +58,21 @@ export class AuthService {
           },
         };
       } else {
-        return { status: HttpStatus.UNAUTHORIZED, msg: { msg: 'Invalid credentials' } };
+        return { status: HttpStatus.UNAUTHORIZED, message: { msg: 'Invalid credentials' } };
       }
     } else {
-      return { status: HttpStatus.BAD_REQUEST, msg: { msg: 'Invalid fields.' } };
+      return { status: HttpStatus.BAD_REQUEST, message: { msg: 'Invalid fields.' } };
     }
   }
 
-  async register(body: UserLoginDTO): Promise<Record<string, any>> {
-    // Validation Flag
-    let isOk = true;
+  async register(body: UserLoginDTO): Promise<AuthResult> {
+    try {
+      body.password = bcrypt.hashSync(body.password, 10);
+      await this.userRepository.save(body);
 
-    body.password = bcrypt.hashSync(body.password, 10);
-
-    // Validate DTO against validate function from class-validator
-    await validate(body).then((errors) => {
-      if (errors.length > 0) {
-        console.debug(AuthService.name, errors);
-        isOk = false;
-      }
-    });
-    if (isOk) {
-      await this.userRepository.save(body).catch((error) => {
-        console.debug(error.message, AuthService.name);
-        isOk = false;
-      });
-
-      if (isOk) {
-        return { status: HttpStatus.CREATED, content: { msg: `User created with success` } };
-      } else {
-        return { status: HttpStatus.BAD_REQUEST, content: { msg: 'User already exists' } };
-      }
-    } else {
-      return { status: HttpStatus.BAD_REQUEST, content: { msg: 'Invalid content' } };
+      return { status: HttpStatus.CREATED, message: { msg: `User created with success` } };
+    } catch (error) {
+      return { status: HttpStatus.BAD_REQUEST, message: { msg: 'Invalid content' } };
     }
   }
 }
