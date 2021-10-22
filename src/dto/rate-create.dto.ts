@@ -6,8 +6,8 @@ export class RateCreateDto {
 
   @IsNumber()
   @Max(5)
-  rate: number;
+  readonly rate: number;
 
   @IsString()
-  observation?: string;
+  readonly observation?: string;
 }
