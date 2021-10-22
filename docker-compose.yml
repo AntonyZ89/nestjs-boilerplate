@@ -24,6 +24,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=docker
       - POSTGRES_DB=nestjs
+    command: postgres -c listen_addresses='*' # only in development
 
   pgadmin:
     image: dpage/pgadmin4
