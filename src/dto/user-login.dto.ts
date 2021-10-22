@@ -6,7 +6,7 @@ export class UserLoginDTO {
   @IsEmail()
   @IsNotEmpty()
   @IsUnique(User)
-  email: string;
+  readonly email: string;
 
   @IsString()
   @Length(6)

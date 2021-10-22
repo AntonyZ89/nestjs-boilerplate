@@ -1,15 +1,18 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import * as moment from 'moment';
 import { RefreshTokenRefreshDTO } from 'src/dto/refreshToken-refresh.dto';
 import { UserLoginDTO } from 'src/dto/user-login.dto';
+import { User } from 'src/entities/user.entity';
 import { UserRepository } from 'src/repositories/user.repository';
 import { AuthService } from './auth.service';
 import { AuthRequest } from './interface/auth.request.interface';
 import { JwtAuthGuard } from './strategy/jwt-auth.guard';
 import { TokenService } from './token.service';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -20,8 +23,11 @@ export class AuthController {
   ) {}
 
   @Get('me')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  async me(@Req() req: AuthRequest) {
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
+  @ApiResponse({ status: 200, description: 'Successful.', type: User })
+  async me(@Req() req: AuthRequest): Promise<User> {
     const userId = req.user.id;
 
     return await this.userRepository.findOne(userId);
@@ -41,6 +47,9 @@ export class AuthController {
   }
 
   @Post('refresh')
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Refresh Token' })
   public async refresh(@Body() body: RefreshTokenRefreshDTO) {
     const { user, token } = await this.tokenService.createAccessTokenFromRefreshToken(body.refresh_token);
 
