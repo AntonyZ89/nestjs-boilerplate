@@ -1,3 +1,6 @@
+import { IsDate, IsEmail, IsFQDN, IsPhoneNumber, Length, Max, Min } from 'class-validator';
+import { GenderEnum } from 'src/enums/gender.enum';
+import { MaritalEnum } from 'src/enums/marital.enum';
 import {
   Entity,
   Column,
@@ -26,24 +29,33 @@ export class User {
   surname: string;
 
   @Column({ unique: true })
+  @IsEmail()
   email: string;
 
   @Column()
+  @Length(6)
   password: string;
 
   @Column()
+  @IsDate()
   birthday: Date;
 
-  @Column()
-  gender: number;
+  @Column({ enum: GenderEnum })
+  gender: GenderEnum;
+
+  @Column('enum', { enum: MaritalEnum })
+  marital_status: MaritalEnum;
 
   @Column({ type: 'timestamp' })
+  @IsDate()
   acceptTermsAt: Date;
 
   @CreateDateColumn({ type: 'timestamp' })
+  @IsDate()
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
+  @IsDate()
   updatedAt: Date;
 
   /**
@@ -51,27 +63,28 @@ export class User {
    */
 
   @Column()
-  children: number;
+  children: boolean;
 
   @Column()
-  sexual_orientation: number;
+  sexual_orientation: boolean;
 
   @Column()
-  style: number;
+  style: string;
 
   @Column()
-  smoke: number;
+  smoke: boolean;
 
   @Column()
-  drunk: number;
+  drunk: boolean;
 
   @Column()
-  pets: number;
+  pets: boolean;
 
   @Column()
   hometown: string;
 
   @Column()
+  @IsFQDN()
   webpage: string;
 
   @Column()
@@ -95,79 +108,108 @@ export class User {
   @Column()
   tv_shows: string;
 
+  @Column()
   gastronomic_preferences: string;
 
   /**
    * CONTACT
    */
 
+  @Column()
   home_phone: string;
 
+  @Column()
+  @IsPhoneNumber('BR')
   phone: string;
 
+  @Column()
   address_1: string;
 
+  @Column()
   address_2: string;
 
+  @Column()
   city: string;
 
+  @Column()
   state: string;
 
+  @Column({ length: 8 })
   zip_code: string;
 
+  @Column()
   country: string;
 
   /**
    * PROFESSIONAL
    */
 
+  @Column()
   education: string;
 
+  @Column()
   school: string;
 
+  @Column()
   college: string;
 
+  @Column()
   course: string;
 
+  @Column()
   university_degree: string;
 
+  @Column()
   company: string;
 
+  @Column()
+  @Length(4)
+  @Min(2004)
+  @Max(2022)
   year: string;
 
-  profission: string;
+  @Column()
+  profession: string;
 
+  @Column()
   sector: string;
 
   /**
    * PERSONAL
    */
 
+  @Column()
   title: string;
 
+  @Column()
   strong_point: string;
 
+  @Column()
   height: number;
 
+  @Column()
   eye_color: string;
 
+  @Column()
   hair_color: string;
 
+  @Column()
   physical_type: string;
 
+  @Column()
   body_art: string;
 
+  @Column()
   appearance: string;
 
+  @Column()
   like_me: string;
 
   /**
-   * @RELATIONS
+   * RELATIONS
    */
 
-  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user, {
-    cascade: true,
-  })
+  @OneToMany(() => RefreshToken, (refreshToken) => refreshToken.user, { cascade: true })
   refreshTokens: RefreshToken[];
 
   @ManyToMany(() => Interest, (interest) => interest.users)

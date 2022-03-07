@@ -398,6 +398,5 @@ Temporary Items
 dist
 yarn.lock
 
-# pem
-private-key.pem
-public-key.pem
+# key
+*.key*

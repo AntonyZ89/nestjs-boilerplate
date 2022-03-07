@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 
-export interface AuthResult {
+export interface AuthResult<T> {
   status: HttpStatus;
-  message: any;
+  message: T;
 }

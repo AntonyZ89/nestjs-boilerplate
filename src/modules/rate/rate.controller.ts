@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Param, Post, Put, UseGuards } from '@nestjs/common';
-import { RateCreateDto } from '../../dto/rate-create.dto';
-import { RateUpdateDto } from '../../dto/rate-update.dto';
+import { RateUpdateDto } from 'src/dto/rate/rate-update.dto';
+import { RateCreateDto } from '../../dto/rate/rate-create.dto';
 import { JwtAuthGuard } from '../auth/strategy/jwt-auth.guard';
 import { RateService } from './rate.service';
 

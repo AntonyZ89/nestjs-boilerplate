@@ -1,0 +1,152 @@
+# TODO LIST
+
+- [ ] Testar se todas as colunas marcadas como strings nas entities são limitados a 255 caracteres por padrão, caso contrário terei que especificar cada uma delas para 255
+- [ ] Verificar se o CEP irá aceitar menos do que 8 caracteres
+  - [ ] Ano também ( year em User )
+
+- [ ] Tela de Login
+- [ ] Barra de navegação
+  - [ ] Voltar para a tela inicial
+  - [ ] Voltar para meu perfil
+  - [ ] Aba Comunidades
+  - [ ] Aba Amigos
+  - [ ] Aba Scraps ( Recados )
+  - [ ] Barra de busca
+  - [ ] Botão sair
+  - [ ] Responsivo
+- [ ] Tela Inicial ( Meu Perfil )
+  - [ ] Meus amigos ( máximo 9 )
+  - [ ] Minhas comunidades ( máximo 9 )
+  - [ ] Depoimentos ( máximo 3)
+- [ ] Usuário
+  - [ ] Ignorar
+  - [ ] Reportar
+  - [ ] Adicionar como amigo
+  - [ ] Remover como amigo
+  - [ ] Contador de visualizações
+    - [ ] Desde a data de criação da conta
+    - [ ] Semana passada
+    - [ ] Ontem
+  - [ ] Editar
+    - [ ] Aba Geral
+    - [ ] Aba Social
+    - [ ] Aba Contato
+    - [ ] Aba Profissional
+    - [ ] Aba Pessoal
+  - [ ] Tela de Perfil
+  - [ ] Scraps ( Recados )
+    - [ ] Listar
+    - [ ] Criar
+    - [ ] Excluir
+  - [ ] Fotos
+    - [ ] Album
+      - [ ] Listar
+      - [ ] Criar
+      - [ ] Remover
+    - [ ] Listar
+    - [ ] Adicionar
+    - [ ] Remover
+  - [ ] Vídeos
+    - [ ] Listar
+    - [ ] Adicionar
+    - [ ] Remover
+  - [ ] Tela de Depoimentos
+    - [ ] Listagem
+    - [ ] Aceitar
+    - [ ] Rejeitar
+    - [ ] Excluir
+  - [ ] Fãs
+  - [ ] Configurações
+    - [ ] Escolher exibir ou esconder a visualização da mensagem
+      TODO: adicionar informações de cada aba aqui
+    - [ ] Selecionar Temas
+      - Obrigatório escolher ao menos um
+      - [ ] Claro ( Padrão )
+      - [ ] Escuro
+      - [ ] Cor personalizada
+        - [ ] Gradient ( duas cores )
+          - [ ] Escolher a direção do gradient (opcional)
+  - [ ] Tela Comunidades
+    - [ ] Aba Comunidades do usuário ( Todas )
+    - [ ] Aba Comunidades pendendes
+    - [ ] Aba Comunidades participantes
+- [ ] Sugestão de amigos
+- [ ] Amigos
+  - [ ] Listagem de todos os usuários
+  - [ ] Listagem de meus amigos
+  - [ ] Adicionar
+  - [ ] Excluir
+  - [ ] Avaliar
+    - [ ] ⭐ Sou fã
+    - [ ] 🧊 Confiável ( 0 a 3 )
+    - [ ] 🙂 Legal ( 0 a 3 )
+    - [ ] ❤️ Sexy ( 0 a 3 )
+- [ ] Comunidade
+  - [ ] Listagem
+  - [ ] Visualizar
+  - [ ] Criar
+  - [ ] Excluir
+  - [ ] Entrar
+    - [ ] Solicitar entrada em comunidades privadas
+  - [ ] Sair
+  - [ ] Convidar ( Somente os moderadores e comunidades privadas )
+  - [ ] Forum / Tópicos
+    - [ ] Visualizar
+    - [ ] Listagem
+    - [ ] Criar
+    - [ ] Excluir
+    - [ ] Editar
+    - [ ] Responder
+      - [ ] Responder enquete anonimamente
+      - [ ] Responder um comentário ( mencionar )
+  - [ ] Enquete
+    - [ ] Visualizar
+    - [ ] Listagem
+    - [ ] Criar
+    - [ ] Responder
+      - [ ] anonimamente
+  - [ ] Evento
+    - [ ] Listagem ( Todos os membros )
+    - [ ] Participar ( Todos os membros )
+    - [ ] Criar ( Somente moderador )
+      - Título
+      - Descrição
+      - Data e Horário
+      - Localização
+        - Mapa Google Maps ( opcional )
+    - [ ] Editar ( Somente moderador )
+    - [ ] Responder ( Todos os membros )
+    - [ ] Excluir ( Somente moderador )
+- [ ] Responsivo ( Em andamento )
+- [ ] Copiar estilo de community/id/forum/1 para `poll` e `event`
+- [ ] Remover todos os `TODOs`
+- [ ] Remover todos os `IMPORTANTs`
+- [ ] Remover todos os `FIXMEs`
+- [ ] Remover todos os console.( `logs` | `warnings` | `errors` )
+- [ ] Resolver todos os `eslint-disable`
+- [ ] Revisar todos os headers das páginas
+
+# FUTURE IMPROVEMENTS
+
+- [ ] Socket
+  - [ ] Notificação de solicitação de amizade
+  - [ ] Notificação de solicitação de entrada em comunidade
+  - [ ] Notificação de solicitação de convite para entrar em grupo
+
+- [ ] Chat
+  - [ ] Enviar mensagens para amigos
+  - [ ] Enviar fotos
+  - [ ] Enviar vídeos
+  - [ ] Figurinhas
+  - [ ] Emojis
+  - [ ] Trocar status ( Disponível, Ocupado, Ausente, Invisível )
+  - [ ] Notificar quando visualiza a mensagem
+
+- [ ] Stories ( opcional )
+  - [ ] Adicionar badge "new" na fotos dos usuários quando tiver algum stories novo ( não visualizado )
+  - [ ] Upload de imagem
+  - [ ] Upload de vídeo
+  - [ ] Adicionar texto
+  - [ ] Responder ao stories e criar um chat
+    - [ ] Se o usuário tiver uma conversa existente com o dono da postagem, então apenas adiciona a mensagem de resposta ao stories
+    - [ ] Se o usuário não tiver uma conversa existente com o dono da postagem, então cria uma nova conversa e adiciona a mensagem de resposta ao stories

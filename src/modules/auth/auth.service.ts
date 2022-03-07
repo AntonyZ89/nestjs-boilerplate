@@ -1,10 +1,13 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { validate } from 'class-validator';
 import * as moment from 'moment';
+import { UserLoginResponseDTO } from 'src/dto/user/user-login.response.dto';
+import { UserSignupDTO } from 'src/dto/user/user-signup.dto';
+import { UserSignupResponseDTO } from 'src/dto/user/user-signup.response.dto';
 import { UserRepository } from 'src/repositories/user.repository';
-import { UserLoginDTO } from '../../dto/user-login.dto';
+import { UserLoginDTO } from '../../dto/user/user-login.dto';
 import { AuthResult } from './interface/auth.result.interface';
 import { TokenService } from './token.service';
 
@@ -16,26 +19,16 @@ export class AuthService {
     private readonly tokenService: TokenService,
   ) {}
 
-  async login(body: UserLoginDTO): Promise<AuthResult> {
-    // Validation Flag
-    let isOk = true;
-
+  async login(body: UserLoginDTO): Promise<AuthResult<UserLoginResponseDTO>> {
     // Validate DTO against validate function from class-validator
-    await validate(body).then((errors) => {
-      if (errors.length > 0) {
-        console.debug(AuthService.name, errors);
-        isOk = false;
-      }
-    });
+    const isOk = !(await validate(body)).length;
 
     if (isOk) {
       // Get user information
-      const userDetails = await this.userRepository.findOne({
-        email: body.email,
-      });
+      const userDetails = await this.userRepository.findOne({ email: body.email });
 
       if (!userDetails) {
-        return { status: HttpStatus.UNAUTHORIZED, message: { msg: 'Invalid credentials' } };
+        throw new BadRequestException('Invalid credentials');
       }
 
       // Check if the given password match with saved password
@@ -55,24 +48,22 @@ export class AuthService {
             expires_in: moment()
               .add(this.configService.get<number>('keys.expiresIn'), 's')
               .format('YYYY-MM-DD HH:mm:ss'),
-          },
+          } as UserLoginResponseDTO,
         };
-      } else {
-        return { status: HttpStatus.UNAUTHORIZED, message: { msg: 'Invalid credentials' } };
       }
-    } else {
-      return { status: HttpStatus.BAD_REQUEST, message: { msg: 'Invalid fields.' } };
     }
+
+    throw new BadRequestException('Invalid credentials');
   }
 
-  async register(body: UserLoginDTO): Promise<AuthResult> {
-    try {
-      body.password = bcrypt.hashSync(body.password, 10);
-      await this.userRepository.save(body);
+  async register(body: UserSignupDTO): Promise<AuthResult<UserSignupResponseDTO>> {
+    const errors = await validate(body);
 
-      return { status: HttpStatus.CREATED, message: { msg: `User created with success` } };
-    } catch (error) {
-      return { status: HttpStatus.BAD_REQUEST, message: { msg: 'Invalid content' } };
-    }
+    console.debug({ errors });
+
+    body.password = bcrypt.hashSync(body.password, 10);
+    await this.userRepository.save(body);
+
+    return { status: HttpStatus.CREATED, message: { message: `User created with success` } };
   }
 }

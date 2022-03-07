@@ -1,11 +1,26 @@
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  InternalServerErrorException,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import * as moment from 'moment';
-import { RefreshTokenRefreshDTO } from 'src/dto/refreshToken-refresh.dto';
-import { UserLoginDTO } from 'src/dto/user-login.dto';
-import { User } from 'src/entities/user.entity';
+import { RefreshTokenDTO } from 'src/dto/auth/refresh-token.dto';
+import { UserLoginDTO } from 'src/dto/user/user-login.dto';
+import { UserLoginResponseDTO } from 'src/dto/user/user-login.response.dto';
+import { UserMeDTO } from 'src/dto/user/user-me.dto';
+import { UserSignupDTO } from 'src/dto/user/user-signup.dto';
+import { UserSignupResponseDTO } from 'src/dto/user/user-signup.response.dto';
+import { IBadRequestException } from 'src/exceptions/IBadRequestException';
 import { UserRepository } from 'src/repositories/user.repository';
 import { AuthService } from './auth.service';
 import { AuthRequest } from './interface/auth.request.interface';
@@ -25,32 +40,38 @@ export class AuthController {
   @Get('me')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
-  @ApiResponse({ status: 200, description: 'Successful.', type: User })
-  async me(@Req() req: AuthRequest): Promise<User> {
+  @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized.', type: UnauthorizedException })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Successful.', type: UserMeDTO })
+  async me(@Req() req: AuthRequest): Promise<UserMeDTO> {
     const userId = req.user.id;
 
     return await this.userRepository.findOne(userId);
   }
 
   @Post('login')
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request.', type: IBadRequestException })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Successful.', type: UserLoginResponseDTO })
   async login(@Res() res: Response, @Body() body: UserLoginDTO) {
-    const auth = await this.authService.login(body);
+    const { status, message } = await this.authService.login(body);
 
-    res.status(auth.status).json(auth.message);
+    res.status(status).json(message);
   }
 
   @Post('register')
-  async register(@Res() res: Response, @Body() body: UserLoginDTO) {
-    const auth = await this.authService.register(body);
-    res.status(auth.status).json(auth.message);
+  @ApiResponse({ status: HttpStatus.INTERNAL_SERVER_ERROR, description: 'Error', type: InternalServerErrorException })
+  @ApiResponse({ status: HttpStatus.BAD_REQUEST, description: 'Bad Request.', type: IBadRequestException })
+  @ApiResponse({ status: HttpStatus.OK, description: 'Successful.', type: UserSignupResponseDTO })
+  async register(@Res() res: Response, @Body() body: UserSignupDTO) {
+    const { status, message } = await this.authService.register(body);
+
+    res.status(status).json(message);
   }
 
   @Post('refresh')
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @ApiOperation({ summary: 'Refresh Token' })
-  public async refresh(@Body() body: RefreshTokenRefreshDTO) {
+  public async refresh(@Body() body: RefreshTokenDTO) {
     const { user, token } = await this.tokenService.createAccessTokenFromRefreshToken(body.refresh_token);
 
     return {
