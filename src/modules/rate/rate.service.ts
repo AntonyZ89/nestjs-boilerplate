@@ -13,8 +13,8 @@ export class RateService {
     return this.rateRepository.find();
   }
 
-  one(id: string) {
-    return this.rateRepository.findOne(id);
+  one(id: number) {
+    return this.rateRepository.findOne({ where: { id } });
   }
 
   create(rate: RateCreateDto) {

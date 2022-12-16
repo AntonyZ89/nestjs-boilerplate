@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import { readFileSync } from 'fs';
 
 const TIMES: { [key: string]: number } = {
   d: 24 * 60 * 60,
@@ -6,8 +6,8 @@ const TIMES: { [key: string]: number } = {
   s: 60,
 };
 
-const PUBLIC_KEY = fs.readFileSync('public.key.pub', { encoding: 'utf8', flag: 'r' });
-const PRIVATE_KEY = fs.readFileSync('private.key', { encoding: 'utf8', flag: 'r' });
+const PUBLIC_KEY = readFileSync('public.key.pub', { encoding: 'utf8', flag: 'r' });
+const PRIVATE_KEY = readFileSync('private.key', { encoding: 'utf8', flag: 'r' });
 
 export default () => {
   // converts "30d" to ["30", "d"]

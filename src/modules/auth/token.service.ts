@@ -94,7 +94,7 @@ export class TokenService {
       throw new UnprocessableEntityException('Refresh token malformed');
     }
 
-    return this.userRepository.findOne(subId);
+    return this.userRepository.findOne({ where: { id: subId } });
   }
 
   private getStoredTokenFromRefreshTokenPayload(payload: RefreshTokenPayload): Promise<RefreshToken | undefined> {

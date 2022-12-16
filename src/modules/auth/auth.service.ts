@@ -25,7 +25,9 @@ export class AuthService {
 
     if (isOk) {
       // Get user information
-      const userDetails = await this.userRepository.findOne({ email: body.email });
+      const userDetails = await this.userRepository.findOne({
+        where: { email: body.email },
+      });
 
       if (!userDetails) {
         throw new BadRequestException('Invalid credentials');

@@ -16,7 +16,7 @@
     "noImplicitReturns": true,
     "noImplicitOverride": true,
     "noImplicitThis": true,
-    "noImplicitUseStrict": true,
+    "noImplicitUseStrict": true
   },
   "include": ["src"],
   "exclude": [

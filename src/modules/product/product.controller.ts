@@ -16,7 +16,7 @@ export class ProductController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async view(@Param('id') id: string) {
+  async view(@Param('id') id: number) {
     return await this.productService.one(id);
   }
 

@@ -7,6 +7,7 @@ import config from './config/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { ProductModule } from './modules/product/product.module';
 import { RateModule } from './modules/rate/rate.module';
+import ormconfig from '../ormconfig';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { RateModule } from './modules/rate/rate.module';
       isGlobal: true,
       load: [config],
     }),
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot(ormconfig.options),
     ProductModule,
     RateModule,
     AuthModule,

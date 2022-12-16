@@ -18,8 +18,9 @@ export class ProductService {
     });
   }
 
-  async one(id: string) {
-    const product = await this.productRepository.findOne(id, {
+  async one(id: number) {
+    const product = await this.productRepository.findOne({
+      where: { id },
       relations: ['rates'],
     });
 

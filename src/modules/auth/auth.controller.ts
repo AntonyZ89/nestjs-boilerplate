@@ -45,7 +45,7 @@ export class AuthController {
   async me(@Req() req: AuthRequest): Promise<UserMeDTO> {
     const userId = req.user.id;
 
-    return await this.userRepository.findOne(userId);
+    return await this.userRepository.findOne({ where: { id: userId } });
   }
 
   @Post('login')
