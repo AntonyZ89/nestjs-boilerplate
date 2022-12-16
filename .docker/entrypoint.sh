@@ -2,5 +2,5 @@
 
 npm install
 npm run build
-npm run typeorm:run
+# TODO add prisma migration up cmd
 npm run start:dev
