@@ -1,7 +1,8 @@
 import { Notification } from '@application/entities';
-import { NotificationRepository } from '@application/repositories/notification-repository';
+import { NotificationRepository } from '@application/repositories';
 import { PrismaService } from '@infra/database/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaNotificationRepository implements NotificationRepository {
@@ -29,8 +30,10 @@ export class PrismaNotificationRepository implements NotificationRepository {
     return null;
   }
 
-  async findMany(): Promise<Notification[]> {
-    const result = await this.prismaService.notification.findMany();
+  async findMany(
+    args: Prisma.NotificationFindManyArgs,
+  ): Promise<Notification[]> {
+    const result = await this.prismaService.notification.findMany(args);
 
     return result.map((n) => new Notification(n));
   }

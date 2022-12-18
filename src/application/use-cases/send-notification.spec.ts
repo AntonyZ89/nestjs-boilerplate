@@ -1,4 +1,4 @@
-import { InMemoryNotificationRepository } from '@test/repositories/in-memory-notification.repository';
+import { InMemoryNotificationRepository } from '@test/repositories';
 import { SendNotification } from './send-notification';
 
 describe('Send notification', () => {
@@ -14,6 +14,6 @@ describe('Send notification', () => {
 
     expect(notificationRepository.notifications).toHaveLength(1);
     expect(notificationRepository.notifications.at(0)).toEqual(notification);
-    expect(notification.id).toBe(1);
+    expect(notification.id).toEqual(1);
   });
 });

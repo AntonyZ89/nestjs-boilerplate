@@ -1,7 +1,7 @@
 import { EntityBase } from '../entity.base';
 import { Content } from './content';
 
-interface NotificationProps {
+export interface NotificationProps {
   recipientId: string;
   category: string;
   content: Content;
@@ -10,7 +10,7 @@ interface NotificationProps {
   createdAt?: Date;
 }
 
-type ConstructorProps = Replace<
+export type NotificationConstructorProps = Replace<
   NotificationProps,
   { content: string | Content; readAt?: Date | null; canceledAt?: Date | null }
 > & { id?: number };
@@ -19,7 +19,7 @@ export class Notification implements EntityBase {
   private _id: number;
   private props: NotificationProps;
 
-  constructor(props: ConstructorProps) {
+  constructor(props: NotificationConstructorProps) {
     this.load(props);
   }
 
@@ -127,7 +127,7 @@ export class Notification implements EntityBase {
    * utilities
    */
 
-  load(data: Partial<ConstructorProps>) {
+  load(data: Partial<NotificationConstructorProps>) {
     // update id
     if (data.id) {
       this._id = data.id;

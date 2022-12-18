@@ -1,5 +1,6 @@
 import { Notification } from '@application/entities';
-import { NotificationRepository } from '@application/repositories/notification-repository';
+import { NotificationRepository } from '@application/repositories';
+import { NotificationNotFound } from '@application/use-cases';
 
 export class InMemoryNotificationRepository implements NotificationRepository {
   public notifications: Array<Notification> = [];
@@ -22,5 +23,27 @@ export class InMemoryNotificationRepository implements NotificationRepository {
     );
 
     return notification || null;
+  }
+
+  async save(notification: Notification): Promise<void> {
+    const index = this.notifications.findIndex((n) => n.id === notification.id);
+
+    if (index !== -1) {
+      this.notifications[index] = notification;
+    } else {
+      throw new NotificationNotFound();
+    }
+  }
+
+  async countByRecipientId(recipientId: string): Promise<number> {
+    return this.notifications.filter(
+      (notification) => notification.recipientId === recipientId,
+    ).length;
+  }
+
+  async byRecipientId(recipientId: string): Promise<Array<Notification>> {
+    return this.notifications.filter(
+      (notification) => notification.recipientId === recipientId,
+    );
   }
 }

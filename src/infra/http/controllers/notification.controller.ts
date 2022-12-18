@@ -1,7 +1,7 @@
 import { Notification } from '@application/entities';
-import { NotificationRepository } from '@application/repositories/notification-repository';
+import { NotificationRepository } from '@application/repositories';
 import { Body, Controller, Get, Post } from '@nestjs/common';
-import { CreateNotificationBody } from '../dtos/create-notification-body';
+import { CreateNotificationBody } from '../dtos';
 
 @Controller('notification')
 export class NotificationController {
