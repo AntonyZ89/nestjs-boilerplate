@@ -8,8 +8,12 @@ import { Prisma } from '@prisma/client';
 export class PrismaNotificationRepository implements NotificationRepository {
   constructor(private prismaService: PrismaService) {}
 
+  private get prisma() {
+    return this.prismaService.notification;
+  }
+
   async create(notification: Notification): Promise<Notification> {
-    const result = await this.prismaService.notification.create({
+    const result = await this.prisma.create({
       data: notification.toJSON(),
     });
 
@@ -19,22 +23,37 @@ export class PrismaNotificationRepository implements NotificationRepository {
   }
 
   async findById(notificationId: number): Promise<Notification | null> {
-    const result = await this.prismaService.notification.findFirst({
+    const result = await this.prisma.findFirst({
       where: { id: notificationId },
     });
 
-    if (result) {
-      return new Notification(result);
-    }
-
-    return null;
+    return result ? new Notification(result) : null;
   }
 
   async findMany(
     args: Prisma.NotificationFindManyArgs,
   ): Promise<Notification[]> {
-    const result = await this.prismaService.notification.findMany(args);
+    const result = await this.prisma.findMany(args);
 
     return result.map((n) => new Notification(n));
+  }
+
+  async save(notification: Notification): Promise<void> {
+    await this.prisma.update({
+      where: { id: notification.id },
+      data: notification.toJSON(),
+    });
+  }
+
+  countByRecipientId(recipientId: string): Promise<number> {
+    return this.prisma.count({ where: { recipientId } });
+  }
+
+  async findByRecipientId(recipientId: string): Promise<Notification[]> {
+    const notifications = await this.prisma.findMany({
+      where: { recipientId },
+    });
+
+    return notifications.map((n) => new Notification(n));
   }
 }

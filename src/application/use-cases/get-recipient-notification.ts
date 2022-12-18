@@ -17,7 +17,7 @@ export class GetRecipientNotification {
   async execute(
     request: GetRecipientNotificationRequest,
   ): Promise<GetRecipientNotificationResponse> {
-    const notifications = await this.notificationRepository.byRecipientId(
+    const notifications = await this.notificationRepository.findByRecipientId(
       request.recipientId,
     );
 

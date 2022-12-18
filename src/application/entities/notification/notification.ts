@@ -136,13 +136,9 @@ export class Notification implements EntityBase {
 
   toJSON() {
     return {
+      ...this.props,
       id: this.id,
-      recipientId: this.recipientId,
       content: this.content.value,
-      category: this.category,
-      readAt: this.readAt,
-      canceledAt: this.canceledAt,
-      createdAt: this.createdAt,
     };
   }
 }
