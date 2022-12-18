@@ -83,20 +83,12 @@ export class Notification implements EntityBase {
     return this.props.readAt;
   }
 
-  public set readAt(readAt: Date | null) {
-    this.props.readAt = readAt;
-  }
-
   /*
    * cancelAt
    */
 
   public get canceledAt(): Date | null {
     return this.props.canceledAt;
-  }
-
-  public set canceledAt(cancelAt: Date | null) {
-    this.props.canceledAt = cancelAt;
   }
 
   /*
@@ -112,15 +104,15 @@ export class Notification implements EntityBase {
    */
 
   cancel() {
-    this.canceledAt = new Date();
+    this.props.canceledAt = new Date();
   }
 
   read() {
-    this.readAt = new Date();
+    this.props.readAt = new Date();
   }
 
   unread() {
-    this.readAt = null;
+    this.props.readAt = null;
   }
 
   /*

@@ -1,29 +1,22 @@
-import { Notification } from '@application/entities';
+import { makeNotification } from '@test/factories/notification-factory';
 import { InMemoryNotificationRepository } from '@test/repositories';
 import { CancelNotification } from './cancel-notification';
 import { NotificationNotFound } from './errors';
-import { makeNotification } from '@test/factories/notification-factory';
 
 describe('Cancel notification', () => {
   it('should be able to cancel a notification', async () => {
     const notificationRepository = new InMemoryNotificationRepository();
-    const sendNotification = new CancelNotification(notificationRepository);
+    const cancelNotification = new CancelNotification(notificationRepository);
 
-    const notification = await notificationRepository.create(
-      makeNotification(),
+    const notification = makeNotification();
+
+    await notificationRepository.create(notification);
+
+    await cancelNotification.execute({ notificationId: notification.id });
+
+    expect(notificationRepository.notifications[0].canceledAt).toBeInstanceOf(
+      Date,
     );
-
-    await sendNotification.execute({ notificationId: notification.id });
-
-    const dbNotification = await notificationRepository.findById(
-      notification.id,
-    );
-
-    expect(dbNotification).toBeInstanceOf(Notification);
-
-    if (dbNotification) {
-      expect(dbNotification.canceledAt).toBeInstanceOf(Date);
-    }
   });
 
   it("should'nt be able to cancel a notification who not exists", () => {
