@@ -46,4 +46,12 @@ export class InMemoryNotificationRepository implements NotificationRepository {
       (notification) => notification.recipientId === recipientId,
     );
   }
+
+  async delete(id: number): Promise<void> {
+    const index = this.notifications.findIndex((n) => n.id === id);
+
+    if (index !== -1) {
+      this.notifications.splice(index, 1);
+    }
+  }
 }

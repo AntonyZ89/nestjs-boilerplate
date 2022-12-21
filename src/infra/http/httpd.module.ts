@@ -1,6 +1,7 @@
 import {
   CancelNotification,
   CountRecipientNotification,
+  DeleteNotification,
   GetRecipientNotification,
   ReadNotification,
   SendNotification,
@@ -20,6 +21,7 @@ import { DatabaseModule } from '@infra/database/database.module';
     UnreadNotification,
     CountRecipientNotification,
     GetRecipientNotification,
+    DeleteNotification,
   ],
 })
 export class HttpModule {}

@@ -3,6 +3,7 @@ import { NotificationRepository } from '@application/repositories';
 import {
   CancelNotification,
   CountRecipientNotification,
+  DeleteNotification,
   GetRecipientNotification,
   ReadNotification,
   SendNotification,
@@ -11,6 +12,7 @@ import {
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -31,6 +33,7 @@ export class NotificationController {
     private readonly unreadNotification: UnreadNotification,
     private readonly countRecipientNotification: CountRecipientNotification,
     private readonly getRecipientNotification: GetRecipientNotification,
+    private readonly deleteNotification: DeleteNotification,
   ) {}
 
   @Get()
@@ -50,15 +53,14 @@ export class NotificationController {
     };
   }
 
-  // TODO action and use-case delete
-  // @Delete(':id')
-  // async remove(@Param('id', ParseIntPipe) id: number): Promise<Response> {
-  //   await this.notificationRepository.remove(id);
+  @Delete(':id')
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<Response> {
+    await this.deleteNotification.execute({ notificationId: id });
 
-  //   return {
-  //     message: 'Notificação removida com sucesso',
-  //   };
-  // }
+    return {
+      message: 'Notificação removida com sucesso',
+    };
+  }
 
   @Patch(':id/cancel')
   async cancel(@Param('id', ParseIntPipe) id: number) {
