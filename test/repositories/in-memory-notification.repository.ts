@@ -6,7 +6,7 @@ export class InMemoryNotificationRepository implements NotificationRepository {
   public notifications: Array<Notification> = [];
 
   async create(notification: Notification): Promise<Notification> {
-    const length = this.notifications.push(notification);
+    const length = this.notifications.unshift(notification);
 
     notification.id = length;
 

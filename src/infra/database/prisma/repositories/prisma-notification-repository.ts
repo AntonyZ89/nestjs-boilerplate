@@ -33,7 +33,10 @@ export class PrismaNotificationRepository implements NotificationRepository {
   async findMany(
     args: Prisma.NotificationFindManyArgs,
   ): Promise<Notification[]> {
-    const result = await this.prisma.findMany(args);
+    const result = await this.prisma.findMany({
+      orderBy: { createdAt: 'desc' },
+      ...args,
+    });
 
     return result.map((n) => new Notification(n));
   }
@@ -52,6 +55,7 @@ export class PrismaNotificationRepository implements NotificationRepository {
   async findByRecipientId(recipientId: string): Promise<Notification[]> {
     const notifications = await this.prisma.findMany({
       where: { recipientId },
+      orderBy: { createdAt: 'desc' },
     });
 
     return notifications.map((n) => new Notification(n));

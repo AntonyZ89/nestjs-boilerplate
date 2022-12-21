@@ -7,13 +7,13 @@ export interface NotificationProps {
   content: Content;
   readAt: Date | null;
   canceledAt: Date | null;
-  createdAt?: Date;
+  createdAt: Date;
 }
 
-export type NotificationConstructorProps = Replace<
-  NotificationProps,
-  { content: string | Content; readAt?: Date | null; canceledAt?: Date | null }
-> & { id?: number };
+export type NotificationConstructorProps = Override<
+  PartialSelect<NotificationProps, 'readAt' | 'canceledAt' | 'createdAt'>,
+  { id?: number; content: string | Content }
+>;
 
 export class Notification implements EntityBase {
   private _id: number;
@@ -130,14 +130,15 @@ export class Notification implements EntityBase {
     data.content && (data.content = Content.create(data.content));
     data.readAt = data.readAt ?? null;
     data.canceledAt = data.canceledAt ?? null;
+    data.createdAt && (data.createdAt = data.createdAt);
 
     this.props = Object.assign(this.props ?? {}, data);
   }
 
   toJSON() {
     return {
-      ...this.props,
       id: this.id,
+      ...this.props,
       content: this.content.value,
     };
   }
