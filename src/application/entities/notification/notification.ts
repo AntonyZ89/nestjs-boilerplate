@@ -8,10 +8,14 @@ export interface NotificationProps {
   readAt: Date | null;
   canceledAt: Date | null;
   createdAt: Date;
+  deletedAt: Date | null;
 }
 
 export type NotificationConstructorProps = Override<
-  PartialSelect<NotificationProps, 'readAt' | 'canceledAt' | 'createdAt'>,
+  PartialSelect<
+    NotificationProps,
+    'readAt' | 'canceledAt' | 'createdAt' | 'deletedAt'
+  >,
   { id?: number; content: string | Content }
 >;
 
@@ -100,6 +104,14 @@ export class Notification implements EntityBase {
   }
 
   /*
+   * deletedAt
+   */
+
+  public get deletedAt(): Date | null {
+    return this.props.deletedAt;
+  }
+
+  /*
    * actions
    */
 
@@ -131,6 +143,7 @@ export class Notification implements EntityBase {
     data.readAt = data.readAt ?? null;
     data.canceledAt = data.canceledAt ?? null;
     data.createdAt && (data.createdAt = data.createdAt);
+    data.deletedAt = data.deletedAt ?? null;
 
     this.props = Object.assign(this.props ?? {}, data);
   }

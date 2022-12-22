@@ -3,6 +3,7 @@ export default {
   moduleNameMapper: {
     '@application/(.*)': '<rootDir>/application/$1',
     '@infra/(.*)': '<rootDir>/infra/$1',
+    '@helper/(.*)': '<rootDir>/helper/$1',
     '@test/(.*)': '<rootDir>/../test/$1',
     '@/(.*)': '<rootDir>/$1',
     '~/(.*)': '<rootDir>/$1',
