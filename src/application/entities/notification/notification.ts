@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { EntityBase } from '../entity.base';
 import { Content } from './content';
 
@@ -31,6 +32,7 @@ export class Notification implements EntityBase {
    * id
    */
 
+  @ApiProperty()
   public get id(): number {
     return this._id;
   }
@@ -43,6 +45,7 @@ export class Notification implements EntityBase {
    * recipientId
    */
 
+  @ApiProperty({ example: '60c3a5d0-88c3-4784-8dc9-0ca82798a961' })
   public get recipientId(): string {
     return this.props.recipientId;
   }
@@ -55,6 +58,7 @@ export class Notification implements EntityBase {
    * category
    */
 
+  @ApiProperty()
   public get category(): string {
     return this.props.category;
   }
@@ -67,6 +71,7 @@ export class Notification implements EntityBase {
    * content
    */
 
+  @ApiProperty({ type: 'string' })
   public get content(): Content {
     return this.props.content;
   }
@@ -83,6 +88,7 @@ export class Notification implements EntityBase {
    * readAt
    */
 
+  @ApiProperty({ type: 'string', format: 'date-time', nullable: true })
   public get readAt(): Date | null {
     return this.props.readAt;
   }
@@ -91,6 +97,7 @@ export class Notification implements EntityBase {
    * cancelAt
    */
 
+  @ApiProperty({ type: 'string', format: 'date-time', nullable: true })
   public get canceledAt(): Date | null {
     return this.props.canceledAt;
   }
@@ -99,7 +106,8 @@ export class Notification implements EntityBase {
    * createdAt
    */
 
-  public get createdAt(): Date | undefined {
+  @ApiProperty({ type: 'string', format: 'date-time' })
+  public get createdAt(): Date {
     return this.props.createdAt;
   }
 
@@ -107,6 +115,7 @@ export class Notification implements EntityBase {
    * deletedAt
    */
 
+  @ApiProperty({ type: 'string', format: 'date-time', nullable: true })
   public get deletedAt(): Date | null {
     return this.props.deletedAt;
   }

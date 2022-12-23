@@ -25,6 +25,8 @@
       "@infra/*": ["./src/infra/*"],
       "@helper/*": ["./src/helper/*"],
       "@test/*": ["./test/*"],
+      "@types/*": ["./types/*"],
+      "@enums/*": ["./enums/*"],
       "@/*": ["./src/*"],
       "~/*": ["./*"],
     }

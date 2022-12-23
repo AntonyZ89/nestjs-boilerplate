@@ -1,3 +1,4 @@
+import { SwaggerTags } from '@/enums';
 import { Notification } from '@application/entities';
 import { NotificationRepository } from '@application/repositories';
 import {
@@ -19,11 +20,24 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Notification as PrismaNotification } from '@prisma/client';
-import { CreateNotificationBody } from '../dtos';
-import { Response, ResponseWithModel } from '../types';
+import {
+  BadRequestBody,
+  CreateNotificationBody,
+  NotFoundBody,
+  ResponseBody,
+  CreateNotificationResponseBody,
+} from '../dtos';
 
 @Controller('notification')
+@ApiTags(SwaggerTags.NOTIFICATION)
 export class NotificationController {
   constructor(
     private readonly notificationRepository: NotificationRepository,
@@ -37,14 +51,27 @@ export class NotificationController {
   ) {}
 
   @Get()
+  @ApiOkResponse({
+    description: 'Returns a list of all notifications.',
+    type: Notification,
+    isArray: true,
+  })
   list(): Promise<Array<Notification>> {
     return this.notificationRepository.findMany();
   }
 
   @Post()
+  @ApiCreatedResponse({
+    description: 'Creates a new notification',
+    type: CreateNotificationResponseBody,
+  })
+  @ApiBadRequestResponse({
+    description: 'Failed to create notification',
+    type: BadRequestBody,
+  })
   async create(
     @Body() body: CreateNotificationBody,
-  ): Promise<ResponseWithModel<PrismaNotification>> {
+  ): Promise<CreateNotificationResponseBody> {
     const { notification } = await this.sendNotification.execute(body);
 
     return {
@@ -54,7 +81,12 @@ export class NotificationController {
   }
 
   @Delete(':id')
-  async delete(@Param('id', ParseIntPipe) id: number): Promise<Response> {
+  @ApiOkResponse({
+    description: 'Deletes a notification',
+    type: ResponseBody,
+  })
+  @ApiNotFoundResponse({ type: NotFoundBody })
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<ResponseBody> {
     await this.deleteNotification.execute({ notificationId: id });
 
     return {
@@ -63,7 +95,12 @@ export class NotificationController {
   }
 
   @Patch(':id/cancel')
-  async cancel(@Param('id', ParseIntPipe) id: number) {
+  @ApiOkResponse({
+    description: 'Cancels a notification',
+    type: ResponseBody,
+  })
+  @ApiNotFoundResponse({ type: NotFoundBody })
+  async cancel(@Param('id', ParseIntPipe) id: number): Promise<ResponseBody> {
     await this.cancelNotification.execute({ notificationId: id });
 
     return {
@@ -72,6 +109,14 @@ export class NotificationController {
   }
 
   @Get('count-from/:recipient_id')
+  @ApiOkResponse({
+    description: 'Returns the number of notifications for a recipient.',
+    schema: {
+      properties: {
+        count: { type: 'number' },
+      },
+    },
+  })
   async countFromRecipient(
     @Param('recipient_id') recipientId: string,
   ): Promise<{ count: number }> {
@@ -83,6 +128,11 @@ export class NotificationController {
   }
 
   @Get('from/:recipient_id')
+  @ApiOkResponse({
+    description: 'Returns a list of notifications for a recipient.',
+    type: Notification,
+    isArray: true,
+  })
   async getFromRecipient(
     @Param('recipient_id') recipientId: string,
   ): Promise<Array<PrismaNotification>> {
@@ -94,7 +144,12 @@ export class NotificationController {
   }
 
   @Patch(':id/read')
-  async read(@Param('id', ParseIntPipe) id: number): Promise<Response> {
+  @ApiOkResponse({
+    description: 'Marks a notification as read.',
+    type: ResponseBody,
+  })
+  @ApiNotFoundResponse({ type: NotFoundBody })
+  async read(@Param('id', ParseIntPipe) id: number): Promise<ResponseBody> {
     await this.readNotification.execute({ notificationId: id });
 
     return {
@@ -103,7 +158,12 @@ export class NotificationController {
   }
 
   @Patch(':id/unread')
-  async unread(@Param('id', ParseIntPipe) id: number): Promise<Response> {
+  @ApiOkResponse({
+    description: 'Marks a notification as unread.',
+    type: ResponseBody,
+  })
+  @ApiNotFoundResponse({ type: NotFoundBody })
+  async unread(@Param('id', ParseIntPipe) id: number): Promise<ResponseBody> {
     await this.unreadNotification.execute({ notificationId: id });
 
     return {
