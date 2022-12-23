@@ -31,9 +31,9 @@ import { Notification as PrismaNotification } from '@prisma/client';
 import {
   BadRequestBody,
   CreateNotificationBody,
+  CreateNotificationResponseBody,
   NotFoundBody,
   ResponseBody,
-  CreateNotificationResponseBody,
 } from '../dtos';
 
 @Controller('notification')
