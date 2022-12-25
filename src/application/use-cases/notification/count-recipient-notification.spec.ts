@@ -11,7 +11,7 @@ const recipientId = 'test-recipient-id';
 describe('Count notification by recipientId', () => {
   it('should be able to get notification count', async () => {
     const notificationRepository = new InMemoryNotificationRepository();
-    const userRepository = new InMemoryUserRepository();
+    const userRepository = new InMemoryUserRepository(notificationRepository);
     const countRecipientNotification = new CountRecipientNotification(
       notificationRepository,
     );

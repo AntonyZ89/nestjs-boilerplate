@@ -3,6 +3,7 @@ import {
   CountRecipientNotification,
   DeleteNotification,
   GetRecipientNotification,
+  GetUserNotification,
   ReadNotification,
   SendNotification,
   UnreadNotification,
@@ -25,6 +26,7 @@ import { CreateUser } from '@application/use-cases/user';
     CountRecipientNotification,
     GetRecipientNotification,
     DeleteNotification,
+    GetUserNotification,
     // user
     CreateUser,
   ],

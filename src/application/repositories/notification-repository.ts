@@ -14,5 +14,6 @@ export abstract class NotificationRepository {
   ): Promise<void>;
   abstract countByRecipientId(recipientId: string): Promise<number>;
   abstract findByRecipientId(recipientId: string): Promise<Array<Notification>>;
+  abstract findByUserId(userId: number): Promise<Array<Notification>>;
   abstract delete(id: number): Promise<void>;
 }

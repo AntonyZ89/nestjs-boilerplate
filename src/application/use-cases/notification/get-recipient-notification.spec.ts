@@ -11,7 +11,7 @@ const recipientId = 'test-recipient-id';
 describe('Get notification by recipientId', () => {
   it('should be able to get notification list', async () => {
     const notificationRepository = new InMemoryNotificationRepository();
-    const userRepository = new InMemoryUserRepository();
+    const userRepository = new InMemoryUserRepository(notificationRepository);
     const countRecipientNotification = new GetRecipientNotification(
       notificationRepository,
     );

@@ -10,7 +10,7 @@ import { makeUser } from '@test/factories/user-factory';
 describe('Delete notification', () => {
   it('should be able to delete a notification', async () => {
     const notificationRepository = new InMemoryNotificationRepository();
-    const userRepository = new InMemoryUserRepository();
+    const userRepository = new InMemoryUserRepository(notificationRepository);
     const deleteNotification = new DeleteNotification(notificationRepository);
 
     const user = await userRepository.create(makeUser());

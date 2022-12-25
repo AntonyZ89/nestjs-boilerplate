@@ -10,7 +10,7 @@ import { makeUser } from '@test/factories/user-factory';
 describe('Cancel notification', () => {
   it('should be able to cancel a notification', async () => {
     const notificationRepository = new InMemoryNotificationRepository();
-    const userRepository = new InMemoryUserRepository();
+    const userRepository = new InMemoryUserRepository(notificationRepository);
     const cancelNotification = new CancelNotification(notificationRepository);
 
     const user = await userRepository.create(makeUser());

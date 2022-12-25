@@ -68,6 +68,12 @@ export class InMemoryNotificationRepository implements NotificationRepository {
     );
   }
 
+  async findByUserId(userId: number): Promise<Notification[]> {
+    return this.notifications.filter(
+      (notification) => notification.userId === userId,
+    );
+  }
+
   async delete(id: number): Promise<void> {
     const index = this.notifications.findIndex((n) => n.id === id);
 

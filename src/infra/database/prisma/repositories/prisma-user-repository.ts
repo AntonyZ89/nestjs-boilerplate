@@ -1,3 +1,4 @@
+import { UserWithNotifications } from '@/types';
 import { UserRepository } from '@application/repositories';
 import { PrismaService } from '@infra/database/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
@@ -19,11 +20,20 @@ export class PrismaUserRepository implements UserRepository {
     return this.prisma.findFirst({ where: { id: userId } });
   }
 
+  findByIdWithNotifications(
+    userId: number,
+  ): Promise<UserWithNotifications | null> {
+    return this.prisma.findFirst({
+      where: { id: userId },
+      include: { notifications: true },
+    });
+  }
+
   findByName(name: string): Promise<User | null> {
     return this.prisma.findFirst({ where: { name } });
   }
 
-  findMany(args?: Prisma.UserFindManyArgs): Promise<User[]> {
+  findMany(args?: Prisma.UserFindManyArgs): Promise<Array<User>> {
     return this.prisma.findMany({
       orderBy: { createdAt: 'desc' },
       ...args,

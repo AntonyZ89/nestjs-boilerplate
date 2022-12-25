@@ -5,6 +5,7 @@ import {
   CountRecipientNotification,
   DeleteNotification,
   GetRecipientNotification,
+  GetUserNotification,
   ReadNotification,
   SendNotification,
   UnreadNotification,
@@ -51,6 +52,7 @@ export class NotificationController {
     private readonly countRecipientNotification: CountRecipientNotification,
     private readonly getRecipientNotification: GetRecipientNotification,
     private readonly deleteNotification: DeleteNotification,
+    private readonly getUserNotification: GetUserNotification,
   ) {}
 
   @Get()
@@ -137,7 +139,7 @@ export class NotificationController {
     return { count };
   }
 
-  @Get('from/:recipient_id')
+  @Get('from-recipient/:recipient_id')
   @ApiOperation({ summary: 'Returns a list of notifications for a recipient.' })
   @ApiOkResponse({
     description: 'Returns a list of notifications for a recipient.',
@@ -149,6 +151,23 @@ export class NotificationController {
   ): Promise<Array<Notification>> {
     const { notifications } = await this.getRecipientNotification.execute({
       recipientId,
+    });
+
+    return notifications;
+  }
+
+  @Get('from-user/:user_id')
+  @ApiOperation({ summary: 'Returns a list of notifications for a user.' })
+  @ApiOkResponse({
+    description: 'Returns a list of notifications for a user.',
+    type: NotificationDTO,
+    isArray: true,
+  })
+  async getFromUser(
+    @Param('user_id', ParseIntPipe) userId: number,
+  ): Promise<Array<Notification>> {
+    const { notifications } = await this.getUserNotification.execute({
+      userId,
     });
 
     return notifications;

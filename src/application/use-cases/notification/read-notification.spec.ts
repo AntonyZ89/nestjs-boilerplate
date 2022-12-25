@@ -10,7 +10,7 @@ import { makeUser } from '@test/factories/user-factory';
 describe('Read notification', () => {
   it('should be able to read a notification', async () => {
     const notificationRepository = new InMemoryNotificationRepository();
-    const userRepository = new InMemoryUserRepository();
+    const userRepository = new InMemoryUserRepository(notificationRepository);
     const readNotification = new ReadNotification(notificationRepository);
 
     const user = await userRepository.create(makeUser());

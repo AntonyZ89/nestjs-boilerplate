@@ -1,3 +1,5 @@
+import { SwaggerTags } from '@/enums';
+import { UserRepository } from '@application/repositories';
 import { CreateUser } from '@application/use-cases/user';
 import { AuthService } from '@infra/auth/auth.service';
 import { LocalAuthGuard } from '@infra/auth/guards';
@@ -10,23 +12,22 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { Request as RequestType } from 'express';
-import {
-  BadRequestBody,
-  UnauthorizedBody,
-  UserCreateBody,
-  UserDTO,
-} from '../dtos';
-import { UserCreateResponse } from '../dtos/user/user-create-response';
-import { LoginResponse } from '../dtos/auth';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User } from '@prisma/client';
-import { SwaggerTags } from '@/enums';
+import { Request as RequestType } from 'express';
+import {
+  BadRequestBody,
+  LoginResponse,
+  UnauthorizedBody,
+  UserCreateBody,
+  UserWithNotificationsDTO,
+} from '../dtos';
+import { UserCreateResponse } from '../dtos/user/user-create-response';
 
 @Controller()
 @ApiTags(SwaggerTags.AUTH)
@@ -34,6 +35,7 @@ export class AppController {
   constructor(
     private authService: AuthService,
     private createUser: CreateUser,
+    private userRepository: UserRepository,
   ) {}
 
   @Post('auth/login')
@@ -42,7 +44,7 @@ export class AppController {
   @ApiOkResponse({ type: LoginResponse })
   @ApiUnauthorizedResponse({ type: UnauthorizedBody })
   async login(@Request() req: RequestType): Promise<LoginResponse> {
-    return this.authService.login(req.user as User);
+    return this.authService.login(req.user!);
   }
 
   @Post('auth/signup')
@@ -59,8 +61,15 @@ export class AppController {
   }
 
   @Get('profile')
-  @ApiOkResponse({ type: UserDTO })
-  profile(@Request() req: RequestType) {
-    return req.user;
+  @ApiOkResponse({ type: UserWithNotificationsDTO })
+  @ApiBearerAuth()
+  async profile(
+    @Request() req: RequestType,
+  ): Promise<UserWithNotificationsDTO> {
+    const user = await this.userRepository.findByIdWithNotifications(
+      req.user!.id,
+    );
+
+    return user!;
   }
 }

@@ -8,7 +8,7 @@ import { makeUser } from '@test/factories/user-factory';
 describe('Send notification', () => {
   it('should be able to send a notification', async () => {
     const notificationRepository = new InMemoryNotificationRepository();
-    const userRepository = new InMemoryUserRepository();
+    const userRepository = new InMemoryUserRepository(notificationRepository);
     const sendNotification = new SendNotification(notificationRepository);
 
     const user = await userRepository.create(makeUser());

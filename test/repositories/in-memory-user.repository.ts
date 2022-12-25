@@ -1,8 +1,14 @@
-import { UserRepository } from '@application/repositories';
+import { UserWithNotifications } from '@/types';
+import {
+  NotificationRepository,
+  UserRepository,
+} from '@application/repositories';
 import { UserNotFound } from '@application/use-cases/errors';
 import { Prisma, User } from '@prisma/client';
 
 export class InMemoryUserRepository implements UserRepository {
+  constructor(private notificationRepository: NotificationRepository) {}
+
   public users: Array<User> = [];
 
   async create(user: Prisma.UserCreateInput): Promise<User> {
@@ -26,6 +32,20 @@ export class InMemoryUserRepository implements UserRepository {
     const user = this.users.find((user) => user.id === UserId);
 
     return user || null;
+  }
+
+  async findByIdWithNotifications(
+    userId: number,
+  ): Promise<UserWithNotifications | null> {
+    const user = this.users.find((user) => user.id === userId);
+
+    if (!user) {
+      return null;
+    }
+
+    return Object.assign(user, {
+      notifications: await this.notificationRepository.findByUserId(user.id),
+    });
   }
 
   async findByName(name: string): Promise<User | null> {

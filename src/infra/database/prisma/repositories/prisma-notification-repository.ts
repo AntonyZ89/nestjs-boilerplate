@@ -11,23 +11,19 @@ export class PrismaNotificationRepository implements NotificationRepository {
     return this.prismaService.notification;
   }
 
-  async create(
-    notification: Prisma.NotificationCreateInput,
-  ): Promise<Notification> {
+  create(notification: Prisma.NotificationCreateInput): Promise<Notification> {
     return this.prisma.create({
       data: notification,
     });
   }
 
-  async findById(notificationId: number): Promise<Notification | null> {
+  findById(notificationId: number): Promise<Notification | null> {
     return this.prisma.findFirst({
       where: { id: notificationId },
     });
   }
 
-  async findMany(
-    args: Prisma.NotificationFindManyArgs,
-  ): Promise<Notification[]> {
+  findMany(args: Prisma.NotificationFindManyArgs): Promise<Notification[]> {
     return this.prisma.findMany({
       orderBy: { createdAt: 'desc' },
       ...args,
@@ -48,9 +44,16 @@ export class PrismaNotificationRepository implements NotificationRepository {
     return this.prisma.count({ where: { recipientId } });
   }
 
-  async findByRecipientId(recipientId: string): Promise<Notification[]> {
+  findByRecipientId(recipientId: string): Promise<Array<Notification>> {
     return this.prisma.findMany({
       where: { recipientId },
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  findByUserId(userId: number): Promise<Array<Notification>> {
+    return this.prisma.findMany({
+      where: { userId },
       orderBy: { createdAt: 'desc' },
     });
   }
