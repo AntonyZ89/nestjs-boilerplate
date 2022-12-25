@@ -7,13 +7,14 @@ import {
   SendNotification,
   UnreadNotification,
 } from '@application/use-cases';
-import { Module } from '@nestjs/common';
-import { NotificationController } from './controllers';
+import { AuthModule } from '@infra/auth/auth.module';
 import { DatabaseModule } from '@infra/database/database.module';
+import { Module } from '@nestjs/common';
+import { AppController, NotificationController } from './controllers';
 
 @Module({
-  imports: [DatabaseModule],
-  controllers: [NotificationController],
+  imports: [DatabaseModule, AuthModule],
+  controllers: [NotificationController, AppController],
   providers: [
     SendNotification,
     CancelNotification,

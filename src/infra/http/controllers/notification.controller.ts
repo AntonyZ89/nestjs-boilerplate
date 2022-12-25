@@ -22,9 +22,11 @@ import {
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 import { Notification as PrismaNotification } from '@prisma/client';
@@ -36,6 +38,7 @@ import {
   ResponseBody,
 } from '../dtos';
 
+@ApiBearerAuth()
 @Controller('notification')
 @ApiTags(SwaggerTags.NOTIFICATION)
 export class NotificationController {
@@ -51,6 +54,7 @@ export class NotificationController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'Returns a list of all notifications.' })
   @ApiOkResponse({
     description: 'Returns a list of all notifications.',
     type: Notification,
@@ -61,6 +65,7 @@ export class NotificationController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Creates a new notification.' })
   @ApiCreatedResponse({
     description: 'Creates a new notification',
     type: CreateNotificationResponseBody,
@@ -81,6 +86,7 @@ export class NotificationController {
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Deletes a notification.' })
   @ApiOkResponse({
     description: 'Deletes a notification',
     type: ResponseBody,
@@ -95,6 +101,7 @@ export class NotificationController {
   }
 
   @Patch(':id/cancel')
+  @ApiOperation({ summary: 'Cancels a notification.' })
   @ApiOkResponse({
     description: 'Cancels a notification',
     type: ResponseBody,
@@ -109,6 +116,9 @@ export class NotificationController {
   }
 
   @Get('count-from/:recipient_id')
+  @ApiOperation({
+    summary: 'Returns the number of notifications for a recipient.',
+  })
   @ApiOkResponse({
     description: 'Returns the number of notifications for a recipient.',
     schema: {
@@ -128,6 +138,7 @@ export class NotificationController {
   }
 
   @Get('from/:recipient_id')
+  @ApiOperation({ summary: 'Returns a list of notifications for a recipient.' })
   @ApiOkResponse({
     description: 'Returns a list of notifications for a recipient.',
     type: Notification,
@@ -144,6 +155,7 @@ export class NotificationController {
   }
 
   @Patch(':id/read')
+  @ApiOperation({ summary: 'Marks a notification as read.' })
   @ApiOkResponse({
     description: 'Marks a notification as read.',
     type: ResponseBody,
@@ -158,6 +170,7 @@ export class NotificationController {
   }
 
   @Patch(':id/unread')
+  @ApiOperation({ summary: 'Marks a notification as unread.' })
   @ApiOkResponse({
     description: 'Marks a notification as unread.',
     type: ResponseBody,
