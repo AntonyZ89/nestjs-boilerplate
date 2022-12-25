@@ -1,6 +1,6 @@
 import { NotificationRepository } from '@application/repositories';
 import { Injectable } from '@nestjs/common';
-import { NotificationNotFound } from './errors';
+import { NotificationNotFound } from '../errors';
 
 interface CancelNotificationRequest {
   notificationId: number;
@@ -23,8 +23,8 @@ export class CancelNotification {
       throw new NotificationNotFound();
     }
 
-    notification.cancel();
+    notification.canceledAt = new Date();
 
-    await this.notificationRepository.save(notification);
+    await this.notificationRepository.save(notification.id, notification);
   }
 }

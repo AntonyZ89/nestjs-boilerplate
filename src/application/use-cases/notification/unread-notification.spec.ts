@@ -1,16 +1,24 @@
 import { makeNotification } from '@test/factories/notification-factory';
-import { InMemoryNotificationRepository } from '@test/repositories';
-import { NotificationNotFound } from './errors';
+import {
+  InMemoryNotificationRepository,
+  InMemoryUserRepository,
+} from '@test/repositories';
+import { NotificationNotFound } from '../errors';
 import { UnreadNotification } from './unread-notification';
+import { makeUser } from '@test/factories/user-factory';
 
 describe('Unread notification', () => {
   it('should be able to unread a notification', async () => {
     const notificationRepository = new InMemoryNotificationRepository();
+    const userRepository = new InMemoryUserRepository();
     const unreadNotification = new UnreadNotification(notificationRepository);
 
-    const notification = makeNotification({ readAt: new Date() });
+    const user = await userRepository.create(makeUser());
+    const userId = user.id;
 
-    await notificationRepository.create(notification);
+    const notification = await notificationRepository.create(
+      makeNotification({ userId, readAt: new Date() }),
+    );
 
     expect(notificationRepository.notifications[0].readAt).toBeInstanceOf(Date);
 

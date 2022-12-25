@@ -1,15 +1,23 @@
-import {
-  NotificationConstructorProps,
-  Notification,
-} from '@application/entities';
+import { Notification, Prisma } from '@prisma/client';
 
-type ArgsType = Partial<NotificationConstructorProps>;
+type ArgsType = Partial<Omit<Notification, 'id' | 'userId'>> & {
+  userId: number;
+};
 
-export function makeNotification(args: ArgsType = {}): Notification {
-  return new Notification({
+interface Result extends Prisma.NotificationCreateInput {
+  user: {
+    connect: { id: number };
+  };
+}
+
+export function makeNotification(args: ArgsType): Result {
+  return {
     category: 'gift',
     content: 'you received a new gift',
     recipientId: 'factory-recipient-id',
     ...args,
-  });
+    user: {
+      connect: { id: args.userId },
+    },
+  };
 }

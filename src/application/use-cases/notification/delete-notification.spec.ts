@@ -1,16 +1,24 @@
 import { makeNotification } from '@test/factories/notification-factory';
-import { InMemoryNotificationRepository } from '@test/repositories';
-import { NotificationNotFound } from './errors';
+import {
+  InMemoryNotificationRepository,
+  InMemoryUserRepository,
+} from '@test/repositories';
+import { NotificationNotFound } from '../errors';
 import { DeleteNotification } from './delete-notification';
+import { makeUser } from '@test/factories/user-factory';
 
 describe('Delete notification', () => {
   it('should be able to delete a notification', async () => {
     const notificationRepository = new InMemoryNotificationRepository();
+    const userRepository = new InMemoryUserRepository();
     const deleteNotification = new DeleteNotification(notificationRepository);
 
-    const notification = makeNotification();
+    const user = await userRepository.create(makeUser());
+    const userId = user.id;
 
-    await notificationRepository.create(notification);
+    const notification = await notificationRepository.create(
+      makeNotification({ userId, readAt: new Date() }),
+    );
 
     expect(notificationRepository.notifications).toHaveLength(1);
 

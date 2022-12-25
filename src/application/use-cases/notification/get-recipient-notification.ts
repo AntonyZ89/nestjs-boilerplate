@@ -1,6 +1,6 @@
-import { Notification } from '@application/entities';
 import { NotificationRepository } from '@application/repositories';
 import { Injectable } from '@nestjs/common';
+import { Notification } from '@prisma/client';
 
 interface GetRecipientNotificationRequest {
   recipientId: string;

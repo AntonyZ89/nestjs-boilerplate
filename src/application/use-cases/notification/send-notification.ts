@@ -1,9 +1,10 @@
-import { Notification } from '@application/entities';
 import { NotificationRepository } from '@application/repositories/notification-repository';
 import { Injectable } from '@nestjs/common';
+import { Notification } from '@prisma/client';
 
 interface SendNotificationRequest {
   recipientId: string;
+  userId: number;
   content: string;
   category: string;
 }
@@ -19,9 +20,14 @@ export class SendNotification {
   async execute(
     request: SendNotificationRequest,
   ): Promise<SendNotificationResponse> {
-    const notification = new Notification(request);
+    const { userId, ...rest } = request;
 
-    await this.notificationRepository.create(notification);
+    const notification = await this.notificationRepository.create({
+      ...rest,
+      user: {
+        connect: { id: userId },
+      },
+    });
 
     return {
       notification,

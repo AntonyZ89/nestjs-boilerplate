@@ -1,20 +1,20 @@
 import { NotificationRepository } from '@application/repositories';
 import { Injectable } from '@nestjs/common';
-import { NotificationNotFound } from './errors';
+import { NotificationNotFound } from '../errors';
 
-interface ReadNotificationRequest {
+interface DeleteNotificationRequest {
   notificationId: number;
 }
 
-type ReadNotificationResponse = void;
+type DeleteNotificationResponse = void;
 
 @Injectable()
-export class ReadNotification {
+export class DeleteNotification {
   constructor(private notificationRepository: NotificationRepository) {}
 
   async execute(
-    request: ReadNotificationRequest,
-  ): Promise<ReadNotificationResponse> {
+    request: DeleteNotificationRequest,
+  ): Promise<DeleteNotificationResponse> {
     const notification = await this.notificationRepository.findById(
       request.notificationId,
     );
@@ -23,8 +23,6 @@ export class ReadNotification {
       throw new NotificationNotFound();
     }
 
-    notification.read();
-
-    await this.notificationRepository.save(notification);
+    await this.notificationRepository.delete(notification.id);
   }
 }

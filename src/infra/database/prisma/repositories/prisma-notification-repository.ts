@@ -1,8 +1,7 @@
-import { Notification } from '@application/entities';
 import { NotificationRepository } from '@application/repositories';
 import { PrismaService } from '@infra/database/prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Notification, Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaNotificationRepository implements NotificationRepository {
@@ -12,39 +11,36 @@ export class PrismaNotificationRepository implements NotificationRepository {
     return this.prismaService.notification;
   }
 
-  async create(notification: Notification): Promise<Notification> {
-    const result = await this.prisma.create({
-      data: notification.toJSON(),
+  async create(
+    notification: Prisma.NotificationCreateInput,
+  ): Promise<Notification> {
+    return this.prisma.create({
+      data: notification,
     });
-
-    notification.load(result);
-
-    return notification;
   }
 
   async findById(notificationId: number): Promise<Notification | null> {
-    const result = await this.prisma.findFirst({
+    return this.prisma.findFirst({
       where: { id: notificationId },
     });
-
-    return result ? new Notification(result) : null;
   }
 
   async findMany(
     args: Prisma.NotificationFindManyArgs,
   ): Promise<Notification[]> {
-    const result = await this.prisma.findMany({
+    return this.prisma.findMany({
       orderBy: { createdAt: 'desc' },
       ...args,
     });
-
-    return result.map((n) => new Notification(n));
   }
 
-  async save(notification: Notification): Promise<void> {
+  async save(
+    notificationId: number,
+    data: Prisma.NotificationUpdateInput,
+  ): Promise<void> {
     await this.prisma.update({
-      where: { id: notification.id },
-      data: notification.toJSON(),
+      where: { id: notificationId },
+      data,
     });
   }
 
@@ -53,12 +49,10 @@ export class PrismaNotificationRepository implements NotificationRepository {
   }
 
   async findByRecipientId(recipientId: string): Promise<Notification[]> {
-    const notifications = await this.prisma.findMany({
+    return this.prisma.findMany({
       where: { recipientId },
       orderBy: { createdAt: 'desc' },
     });
-
-    return notifications.map((n) => new Notification(n));
   }
 
   async delete(id: number): Promise<void> {

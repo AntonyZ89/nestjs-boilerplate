@@ -21,6 +21,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
      * TODO type param's args to Notification Prisma interface
      */
     this.$use(async (params, next) => {
+      if (!params.model || !['Notification', 'User'].includes(params.model)) {
+        return next(params);
+      }
+
       switch (params.action) {
         case 'delete':
           params.action = 'update';

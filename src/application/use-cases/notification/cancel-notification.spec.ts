@@ -1,16 +1,24 @@
 import { makeNotification } from '@test/factories/notification-factory';
-import { InMemoryNotificationRepository } from '@test/repositories';
+import {
+  InMemoryNotificationRepository,
+  InMemoryUserRepository,
+} from '@test/repositories';
 import { CancelNotification } from './cancel-notification';
-import { NotificationNotFound } from './errors';
+import { NotificationNotFound } from '../errors';
+import { makeUser } from '@test/factories/user-factory';
 
 describe('Cancel notification', () => {
   it('should be able to cancel a notification', async () => {
     const notificationRepository = new InMemoryNotificationRepository();
+    const userRepository = new InMemoryUserRepository();
     const cancelNotification = new CancelNotification(notificationRepository);
 
-    const notification = makeNotification();
+    const user = await userRepository.create(makeUser());
+    const userId = user.id;
 
-    await notificationRepository.create(notification);
+    const notification = await notificationRepository.create(
+      makeNotification({ userId, readAt: new Date() }),
+    );
 
     await cancelNotification.execute({ notificationId: notification.id });
 

@@ -1,16 +1,24 @@
-import { InMemoryNotificationRepository } from '@test/repositories';
+import {
+  InMemoryNotificationRepository,
+  InMemoryUserRepository,
+} from '@test/repositories';
 import { ReadNotification } from './read-notification';
 import { makeNotification } from '@test/factories/notification-factory';
-import { NotificationNotFound } from './errors';
+import { NotificationNotFound } from '../errors';
+import { makeUser } from '@test/factories/user-factory';
 
 describe('Read notification', () => {
   it('should be able to read a notification', async () => {
     const notificationRepository = new InMemoryNotificationRepository();
+    const userRepository = new InMemoryUserRepository();
     const readNotification = new ReadNotification(notificationRepository);
 
-    const notification = makeNotification();
+    const user = await userRepository.create(makeUser());
+    const userId = user.id;
 
-    await notificationRepository.create(notification);
+    const notification = await notificationRepository.create(
+      makeNotification({ userId, readAt: new Date() }),
+    );
 
     await readNotification.execute({ notificationId: notification.id });
 

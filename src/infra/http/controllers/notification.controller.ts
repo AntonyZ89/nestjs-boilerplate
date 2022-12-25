@@ -1,5 +1,4 @@
 import { SwaggerTags } from '@/enums';
-import { Notification } from '@application/entities';
 import { NotificationRepository } from '@application/repositories';
 import {
   CancelNotification,
@@ -9,7 +8,7 @@ import {
   ReadNotification,
   SendNotification,
   UnreadNotification,
-} from '@application/use-cases';
+} from '@application/use-cases/notification';
 import {
   Body,
   Controller,
@@ -29,12 +28,13 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Notification as PrismaNotification } from '@prisma/client';
+import { Notification } from '@prisma/client';
 import {
   BadRequestBody,
   CreateNotificationBody,
   CreateNotificationResponseBody,
   NotFoundBody,
+  NotificationDTO,
   ResponseBody,
 } from '../dtos';
 
@@ -57,7 +57,7 @@ export class NotificationController {
   @ApiOperation({ summary: 'Returns a list of all notifications.' })
   @ApiOkResponse({
     description: 'Returns a list of all notifications.',
-    type: Notification,
+    type: NotificationDTO,
     isArray: true,
   })
   list(): Promise<Array<Notification>> {
@@ -81,7 +81,7 @@ export class NotificationController {
 
     return {
       message: 'Criado com sucesso!',
-      model: notification.toJSON(),
+      model: notification,
     };
   }
 
@@ -141,17 +141,17 @@ export class NotificationController {
   @ApiOperation({ summary: 'Returns a list of notifications for a recipient.' })
   @ApiOkResponse({
     description: 'Returns a list of notifications for a recipient.',
-    type: Notification,
+    type: NotificationDTO,
     isArray: true,
   })
   async getFromRecipient(
     @Param('recipient_id') recipientId: string,
-  ): Promise<Array<PrismaNotification>> {
+  ): Promise<Array<Notification>> {
     const { notifications } = await this.getRecipientNotification.execute({
       recipientId,
     });
 
-    return notifications.map((n) => n.toJSON());
+    return notifications;
   }
 
   @Patch(':id/read')

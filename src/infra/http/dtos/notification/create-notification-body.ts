@@ -8,6 +8,10 @@ export class CreateNotificationBody {
   recipientId: string;
 
   @IsNotEmpty()
+  @ApiProperty()
+  userId: number;
+
+  @IsNotEmpty()
   @Length(10, 100)
   @ApiProperty()
   content: string;
