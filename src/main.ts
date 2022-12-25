@@ -6,7 +6,8 @@ import {
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { BadRequestResponse, SwaggerTags } from './types';
+import { BadRequestResponse } from './types';
+import { SwaggerTags } from './enums';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,7 +15,8 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('API')
     .setVersion('1.0')
-    .addTag(SwaggerTags.NOTIFICATION, 'Notificação CRUD API')
+    .addTag(SwaggerTags.NOTIFICATION, 'Notification CRUD API')
+    .addTag(SwaggerTags.AUTH, 'Authentication API')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);

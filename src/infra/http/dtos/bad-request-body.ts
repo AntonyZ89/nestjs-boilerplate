@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class BadRequestBody implements BadRequestResponse {
   @ApiProperty({ example: HttpStatus.BAD_REQUEST })
-  statusCode: HttpStatus;
+  statusCode: HttpStatus.BAD_REQUEST;
 
   @ApiProperty()
   message: string;

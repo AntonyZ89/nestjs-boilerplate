@@ -11,14 +11,30 @@ datasource db {
 }
 
 model Notification {
-  id          Int       @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   recipientId String
-  content     String
-  category    String
-  readAt      DateTime?
-  canceledAt  DateTime?
-  createdAt   DateTime  @default(now())
-  deletedAt   DateTime?
+  userId      Int
+
+  content  String
+  category String
+
+  readAt     DateTime?
+  canceledAt DateTime?
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
+
+  user User @relation(fields: [userId], references: [id])
 
   @@index([recipientId])
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  notifications Notification[]
 }

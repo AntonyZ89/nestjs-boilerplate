@@ -1,16 +1,16 @@
-import { UserModule } from '@infra/user/user.module';
+import { DatabaseModule } from '@infra/database/database.module';
 import { Module } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
-import { jwtConstants } from './constants';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtStrategy, LocalStrategy } from './strategies';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { AuthService } from './auth.service';
+import { jwtConstants } from './constants';
 import { JwtAuthGuard } from './guards';
+import { JwtStrategy, LocalStrategy } from './strategies';
 
 @Module({
   imports: [
-    UserModule,
+    DatabaseModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
