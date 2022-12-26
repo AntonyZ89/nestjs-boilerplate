@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { Notification } from '@prisma/client';
 
 interface SendNotificationRequest {
-  recipientId: string;
   userId: number;
   content: string;
   category: string;

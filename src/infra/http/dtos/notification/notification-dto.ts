@@ -6,9 +6,6 @@ export class NotificationDTO implements Notification {
   id: number;
 
   @ApiProperty()
-  recipientId: string;
-
-  @ApiProperty()
   userId: number;
 
   @ApiProperty()

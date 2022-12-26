@@ -40,17 +40,6 @@ export class PrismaNotificationRepository implements NotificationRepository {
     });
   }
 
-  countByRecipientId(recipientId: string): Promise<number> {
-    return this.prisma.count({ where: { recipientId } });
-  }
-
-  findByRecipientId(recipientId: string): Promise<Array<Notification>> {
-    return this.prisma.findMany({
-      where: { recipientId },
-      orderBy: { createdAt: 'desc' },
-    });
-  }
-
   findByUserId(userId: number): Promise<Array<Notification>> {
     return this.prisma.findMany({
       where: { userId },

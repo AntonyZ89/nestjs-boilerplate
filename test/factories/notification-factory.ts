@@ -14,7 +14,6 @@ export function makeNotification(args: ArgsType): Result {
   return {
     category: 'gift',
     content: 'you received a new gift',
-    recipientId: 'factory-recipient-id',
     ...args,
     user: {
       connect: { id: args.userId },

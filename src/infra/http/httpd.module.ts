@@ -1,18 +1,16 @@
 import {
   CancelNotification,
-  CountRecipientNotification,
   DeleteNotification,
-  GetRecipientNotification,
   GetUserNotification,
   ReadNotification,
   SendNotification,
   UnreadNotification,
 } from '@application/use-cases/notification';
+import { CreateUser } from '@application/use-cases/user';
 import { AuthModule } from '@infra/auth/auth.module';
 import { DatabaseModule } from '@infra/database/database.module';
 import { Module } from '@nestjs/common';
 import { AppController, NotificationController } from './controllers';
-import { CreateUser } from '@application/use-cases/user';
 
 @Module({
   imports: [DatabaseModule, AuthModule],
@@ -23,8 +21,6 @@ import { CreateUser } from '@application/use-cases/user';
     CancelNotification,
     ReadNotification,
     UnreadNotification,
-    CountRecipientNotification,
-    GetRecipientNotification,
     DeleteNotification,
     GetUserNotification,
     // user

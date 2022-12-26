@@ -18,7 +18,6 @@ describe('Send notification', () => {
       userId,
       content: 'This is a test',
       category: 'test',
-      recipientId: 'test-recipient-id',
     });
 
     expect(notificationRepository.notifications).toHaveLength(1);

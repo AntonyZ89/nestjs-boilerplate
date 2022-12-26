@@ -15,6 +15,7 @@ import {
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
+  ApiBody,
   ApiOkResponse,
   ApiTags,
   ApiUnauthorizedResponse,
@@ -22,6 +23,7 @@ import {
 import { Request as RequestType } from 'express';
 import {
   BadRequestBody,
+  LoginBody,
   LoginResponse,
   UnauthorizedBody,
   UserCreateBody,
@@ -41,6 +43,7 @@ export class AppController {
   @Post('auth/login')
   @Public()
   @UseGuards(LocalAuthGuard)
+  @ApiBody({ type: LoginBody })
   @ApiOkResponse({ type: LoginResponse })
   @ApiUnauthorizedResponse({ type: UnauthorizedBody })
   async login(@Request() req: RequestType): Promise<LoginResponse> {

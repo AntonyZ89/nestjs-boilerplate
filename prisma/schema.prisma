@@ -11,9 +11,8 @@ datasource db {
 }
 
 model Notification {
-  id          Int    @id @default(autoincrement())
-  recipientId String
-  userId      Int
+  id     Int @id @default(autoincrement())
+  userId Int
 
   content  String
   category String
@@ -24,8 +23,6 @@ model Notification {
   deletedAt  DateTime?
 
   user User @relation(fields: [userId], references: [id])
-
-  @@index([recipientId])
 }
 
 model User {

@@ -2,9 +2,7 @@ import { SwaggerTags } from '@/enums';
 import { NotificationRepository } from '@application/repositories';
 import {
   CancelNotification,
-  CountRecipientNotification,
   DeleteNotification,
-  GetRecipientNotification,
   GetUserNotification,
   ReadNotification,
   SendNotification,
@@ -49,8 +47,6 @@ export class NotificationController {
     private readonly sendNotification: SendNotification,
     private readonly readNotification: ReadNotification,
     private readonly unreadNotification: UnreadNotification,
-    private readonly countRecipientNotification: CountRecipientNotification,
-    private readonly getRecipientNotification: GetRecipientNotification,
     private readonly deleteNotification: DeleteNotification,
     private readonly getUserNotification: GetUserNotification,
   ) {}
@@ -115,45 +111,6 @@ export class NotificationController {
     return {
       message: 'Cancelado com sucesso.',
     };
-  }
-
-  @Get('count-from/:recipient_id')
-  @ApiOperation({
-    summary: 'Returns the number of notifications for a recipient.',
-  })
-  @ApiOkResponse({
-    description: 'Returns the number of notifications for a recipient.',
-    schema: {
-      properties: {
-        count: { type: 'number' },
-      },
-    },
-  })
-  async countFromRecipient(
-    @Param('recipient_id') recipientId: string,
-  ): Promise<{ count: number }> {
-    const { count } = await this.countRecipientNotification.execute({
-      recipientId,
-    });
-
-    return { count };
-  }
-
-  @Get('from-recipient/:recipient_id')
-  @ApiOperation({ summary: 'Returns a list of notifications for a recipient.' })
-  @ApiOkResponse({
-    description: 'Returns a list of notifications for a recipient.',
-    type: NotificationDTO,
-    isArray: true,
-  })
-  async getFromRecipient(
-    @Param('recipient_id') recipientId: string,
-  ): Promise<Array<Notification>> {
-    const { notifications } = await this.getRecipientNotification.execute({
-      recipientId,
-    });
-
-    return notifications;
   }
 
   @Get('from-user/:user_id')

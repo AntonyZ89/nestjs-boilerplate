@@ -14,7 +14,6 @@ export class InMemoryNotificationRepository implements NotificationRepository {
   async create(notification: NotificationCreate): Promise<Notification> {
     const payload = {
       id: this.notifications.length + 1,
-      recipientId: notification.recipientId,
       userId: notification.user.connect.id,
       content: notification.content,
       category: notification.category,
@@ -54,18 +53,6 @@ export class InMemoryNotificationRepository implements NotificationRepository {
     } else {
       throw new NotificationNotFound();
     }
-  }
-
-  async countByRecipientId(recipientId: string): Promise<number> {
-    return this.notifications.filter(
-      (notification) => notification.recipientId === recipientId,
-    ).length;
-  }
-
-  async findByRecipientId(recipientId: string): Promise<Array<Notification>> {
-    return this.notifications.filter(
-      (notification) => notification.recipientId === recipientId,
-    );
   }
 
   async findByUserId(userId: number): Promise<Notification[]> {
