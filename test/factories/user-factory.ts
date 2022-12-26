@@ -4,7 +4,8 @@ type ArgsType = Partial<Prisma.UserCreateInput>;
 
 export function makeUser(args: ArgsType = {}): Prisma.UserCreateInput {
   return {
-    name: 'Antony',
+    username: 'Antony',
+    password: '10203040',
     ...args,
   };
 }

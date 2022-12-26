@@ -29,8 +29,15 @@ export class PrismaUserRepository implements UserRepository {
     });
   }
 
-  findByName(name: string): Promise<User | null> {
-    return this.prisma.findFirst({ where: { name } });
+  findByUsername(username: string): Promise<User | null> {
+    return this.prisma.findFirst({
+      where: {
+        username: {
+          equals: username,
+          mode: 'insensitive',
+        },
+      },
+    });
   }
 
   findMany(args?: Prisma.UserFindManyArgs): Promise<Array<User>> {

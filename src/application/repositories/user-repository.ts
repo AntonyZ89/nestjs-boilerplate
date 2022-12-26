@@ -7,7 +7,7 @@ export abstract class UserRepository {
   abstract findByIdWithNotifications(
     userId: number,
   ): Promise<UserWithNotifications | null>;
-  abstract findByName(name: string): Promise<User | null>;
+  abstract findByUsername(name: string): Promise<User | null>;
   abstract findMany(args?: Prisma.UserFindManyArgs): Promise<Array<User>>;
   abstract save(userId: number, data: Prisma.UserUpdateInput): Promise<void>;
   abstract delete(userId: number): Promise<void>;

@@ -5,7 +5,7 @@ import { UserDTO } from './user-dto';
 
 export class UserCreateResponse implements ResponseWithModel {
   @ApiProperty({ type: UserDTO })
-  model: User;
+  model: Omit<User, 'password'>;
 
   @ApiProperty()
   message: string;

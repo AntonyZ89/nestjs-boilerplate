@@ -4,8 +4,9 @@ import { LoginResponse } from '@infra/http/dtos/auth';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
-type ProcessedUser = User;
+export type ProcessedUser = Omit<User, 'password'>;
 
 @Injectable()
 export class AuthService {
@@ -18,11 +19,10 @@ export class AuthService {
     username: string,
     pass: string,
   ): Promise<ProcessedUser | null> {
-    const user = await this.userRepository.findByName(username);
+    const user = await this.userRepository.findByUsername(username);
 
-    // TODO use [bcrypt]
-    if (user /* && user.password === pass*/) {
-      const { /* password,  */ ...result } = user;
+    if (user && bcrypt.compareSync(pass, user.password)) {
+      const { password, ...result } = user;
       return { ...result };
     }
     return null;
@@ -30,7 +30,7 @@ export class AuthService {
 
   async login(user: ProcessedUser): Promise<LoginResponse> {
     const payload: Omit<AuthPayload, 'iat' | 'exp'> = {
-      username: user.name,
+      username: user.username,
       sub: user.id,
     };
 

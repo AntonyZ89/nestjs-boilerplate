@@ -6,7 +6,7 @@ import { UserWithNotifications } from '@/types';
 
 export class UserWithNotificationsDTO
   extends UserDTO
-  implements UserWithNotifications
+  implements Omit<UserWithNotifications, 'password'>
 {
   @ApiProperty({ type: NotificationDTO, isArray: true })
   notifications: Array<Notification>;

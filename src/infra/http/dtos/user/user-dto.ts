@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 
-export class UserDTO implements User {
+export class UserDTO implements Omit<User, 'password'> {
   @ApiProperty()
   id: number;
 
   @ApiProperty()
-  name: string;
+  username: string;
 
   @ApiProperty({ type: 'string', format: 'date-time' })
   createdAt: Date;
