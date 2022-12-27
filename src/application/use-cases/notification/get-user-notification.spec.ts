@@ -28,4 +28,15 @@ describe('Get notification by userId', () => {
       ]),
     );
   });
+
+  it("should'nt be able to get notification list", async () => {
+    const notificationRepository = new InMemoryNotificationRepository();
+    const getUserNotification = new GetUserNotification(notificationRepository);
+
+    const { notifications } = await getUserNotification.execute({
+      userId: 999,
+    });
+
+    expect(notifications).toHaveLength(0);
+  });
 });
