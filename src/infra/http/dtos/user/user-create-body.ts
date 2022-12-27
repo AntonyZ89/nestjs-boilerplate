@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '@prisma/client';
-import { IsNotEmpty, Length, Matches } from 'class-validator';
+import { IsNotEmpty, IsString, Length, Matches } from 'class-validator';
 
 export class UserCreateBody
   implements Omit<User, 'id' | 'createdAt' | 'deletedAt'>
 {
+  @IsString()
   @IsNotEmpty()
   @ApiProperty({
     minLength: 6,
@@ -18,6 +19,7 @@ export class UserCreateBody
   })
   username: string;
 
+  @IsString()
   @IsNotEmpty()
   @Length(6)
   @ApiProperty()

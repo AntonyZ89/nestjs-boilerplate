@@ -17,5 +17,13 @@ export default {
   },
   collectCoverageFrom: ['**/*.(t|j)s'],
   coverageDirectory: '../coverage',
+  coveragePathIgnorePatterns: [
+    '<rootDir>/application/use-cases/errors/index.ts',
+    '<rootDir>/application/use-cases/notification/index.ts',
+    '<rootDir>/application/use-cases/user/index.ts',
+    '<rootDir>/enums',
+    '<rootDir>/helper',
+    '<rootDir>/types',
+  ],
   testEnvironment: 'node',
 };

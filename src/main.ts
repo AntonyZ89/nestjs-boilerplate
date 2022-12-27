@@ -24,6 +24,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(
     new ValidationPipe({
+      whitelist: true,
       // TODO melhorar esse exception factory, buscar sobre async exception factory ou algo relacionado
       // TODO customizar message e status code pelo controller
       // TODO buscar sobre async validator
