@@ -1,13 +1,14 @@
+import { UserWithNotifications } from '@/types';
+import { UserRepository } from '@application/repositories';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserCreateInput } from '../entities';
-import { UserRepository } from '@application/repositories';
-import { UserWithNotifications } from '@/types';
 
 @Injectable()
 export class TypeOrmUserRepository implements UserRepository {
   constructor(
+    // TypeORM base repository
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}

@@ -1,17 +1,19 @@
 import { AuthPayload } from '@/types';
-import { UserRepository } from '@application/repositories';
 import { User } from '@infra/database/typeorm/entities';
 import { LoginResponse } from '@infra/http/dtos/auth';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
 
 export type ProcessedUser = Omit<User, 'password'>;
 
 @Injectable()
 export class AuthService {
   constructor(
-    private userRepository: UserRepository,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
 
@@ -19,12 +21,17 @@ export class AuthService {
     username: string,
     pass: string,
   ): Promise<ProcessedUser | null> {
-    const user = await this.userRepository.findByUsername(username);
+    // gets user using query builder to force select of password
+    const user = await this.userRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .getOne();
 
-    if (user && bcrypt.compareSync(pass, user.password)) {
+    if (user && bcrypt.compareSync(pass, user.password!)) {
       const { password, ...rest } = user;
       return rest;
     }
+
     return null;
   }
 

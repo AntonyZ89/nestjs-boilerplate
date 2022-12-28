@@ -19,11 +19,11 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   @Column({ select: false })
-  password: string;
+  password?: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -33,6 +33,10 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
+
+  /*
+   * relations
+   */
 
   @OneToMany(() => Notification, (notification) => notification.user)
   notifications: Notification[];

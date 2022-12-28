@@ -43,6 +43,10 @@ export class Notification {
   @DeleteDateColumn()
   deletedAt: Date | null;
 
+  /*
+   * relations
+   */
+
   @ManyToOne(() => User, (user) => user.notifications)
   user?: User;
 }

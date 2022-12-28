@@ -4,7 +4,7 @@ import { UserDTO } from '@infra/http/dtos';
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 
-type CreateUserRequest = Pick<User, 'username' | 'password'>;
+type CreateUserRequest = Required<Pick<User, 'username' | 'password'>>;
 
 interface CreateUserResponse {
   user: UserDTO;

@@ -20,7 +20,7 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
   }
 
   findMany(): Promise<Notification[]> {
-    return this.notificationRepository.find({ relations: { user: true } });
+    return this.notificationRepository.find();
   }
 
   async save(
@@ -31,7 +31,7 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
   }
 
   findByUserId(userId: number): Promise<Notification[]> {
-    return this.notificationRepository.findBy({ id: userId });
+    return this.notificationRepository.findBy({ userId });
   }
 
   async delete(notificationId: number): Promise<void> {

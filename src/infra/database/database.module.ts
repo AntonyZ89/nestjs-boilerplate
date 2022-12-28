@@ -22,6 +22,6 @@ import {
       useClass: TypeOrmUserRepository,
     },
   ],
-  exports: [NotificationRepository, UserRepository],
+  exports: [TypeOrmModule, NotificationRepository, UserRepository],
 })
 export class DatabaseModule {}
