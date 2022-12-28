@@ -4,18 +4,18 @@ import {
 } from '@application/repositories';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PrismaService } from './prisma/prisma.service';
-import { PrismaNotificationRepository } from './prisma/repositories';
-import { User } from './typeorm/entities';
-import { TypeOrmUserRepository } from './typeorm/repositories';
+import { User, Notification } from './typeorm/entities';
+import {
+  TypeOrmUserRepository,
+  TypeOrmNotificationRepository,
+} from './typeorm/repositories';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User, Notification])],
   providers: [
-    PrismaService,
     {
       provide: NotificationRepository,
-      useClass: PrismaNotificationRepository,
+      useClass: TypeOrmNotificationRepository,
     },
     {
       provide: UserRepository,

@@ -1,17 +1,16 @@
-import { Notification, Prisma } from '@prisma/client';
+import {
+  Notification,
+  NotificationCreateInput,
+} from '@infra/database/typeorm/entities';
 
 export abstract class NotificationRepository {
-  abstract create(
-    notification: Prisma.NotificationCreateInput,
-  ): Promise<Notification>;
+  abstract create(notification: NotificationCreateInput): Promise<Notification>;
   abstract findById(notificationId: number): Promise<Notification | null>;
-  abstract findMany(
-    args?: Prisma.NotificationFindManyArgs,
-  ): Promise<Array<Notification>>;
+  abstract findMany(): Promise<Array<Notification>>;
   abstract save(
-    userId: number,
-    data: Prisma.NotificationUpdateInput,
+    notificationId: number,
+    data: Partial<Notification>,
   ): Promise<void>;
   abstract findByUserId(userId: number): Promise<Array<Notification>>;
-  abstract delete(id: number): Promise<void>;
+  abstract delete(notificationId: number): Promise<void>;
 }

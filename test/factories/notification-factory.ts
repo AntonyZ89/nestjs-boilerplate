@@ -1,22 +1,13 @@
-import { Notification, Prisma } from '@prisma/client';
+import { Notification } from '@infra/database/typeorm/entities';
 
 type ArgsType = Partial<Omit<Notification, 'id' | 'userId'>> & {
   userId: number;
 };
 
-interface Result extends Prisma.NotificationCreateInput {
-  user: {
-    connect: { id: number };
-  };
-}
-
-export function makeNotification(args: ArgsType): Result {
+export function makeNotification(args: ArgsType): Notification {
   return {
     category: 'gift',
     content: 'you received a new gift',
     ...args,
-    user: {
-      connect: { id: args.userId },
-    },
   };
 }

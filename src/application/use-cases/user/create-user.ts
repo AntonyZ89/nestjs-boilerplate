@@ -1,12 +1,13 @@
 import { UserRepository } from '@application/repositories';
+import { User } from '@infra/database/typeorm/entities';
+import { UserDTO } from '@infra/http/dtos';
 import { Injectable } from '@nestjs/common';
-import { Prisma, User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
-type CreateUserRequest = Prisma.UserCreateInput;
+type CreateUserRequest = Pick<User, 'username' | 'password'>;
 
 interface CreateUserResponse {
-  user: Omit<User, 'password'>;
+  user: UserDTO;
 }
 
 @Injectable()

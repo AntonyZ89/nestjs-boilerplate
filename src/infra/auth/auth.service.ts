@@ -1,9 +1,9 @@
 import { AuthPayload } from '@/types';
 import { UserRepository } from '@application/repositories';
+import { User } from '@infra/database/typeorm/entities';
 import { LoginResponse } from '@infra/http/dtos/auth';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 export type ProcessedUser = Omit<User, 'password'>;

@@ -1,11 +1,12 @@
 import { ResponseWithModel } from '@/types';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '@prisma/client';
 import { UserDTO } from './user-dto';
+
+type Model = Omit<UserDTO, 'password' | 'notifications'>;
 
 export class UserCreateResponse implements ResponseWithModel {
   @ApiProperty({ type: UserDTO })
-  model: Omit<User, 'password'>;
+  model: Model;
 
   @ApiProperty()
   message: string;

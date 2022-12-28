@@ -27,7 +27,6 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Notification } from '@prisma/client';
 import {
   BadRequestBody,
   CreateNotificationBody,
@@ -58,7 +57,7 @@ export class NotificationController {
     type: NotificationDTO,
     isArray: true,
   })
-  list(): Promise<Array<Notification>> {
+  list(): Promise<Array<NotificationDTO>> {
     return this.notificationRepository.findMany();
   }
 
@@ -122,7 +121,7 @@ export class NotificationController {
   })
   async getFromUser(
     @Param('user_id', ParseIntPipe) userId: number,
-  ): Promise<Array<Notification>> {
+  ): Promise<Array<NotificationDTO>> {
     const { notifications } = await this.getUserNotification.execute({
       userId,
     });

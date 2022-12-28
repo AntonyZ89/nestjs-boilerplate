@@ -1,6 +1,5 @@
 import { ResponseWithModel } from '@/types';
 import { ApiProperty } from '@nestjs/swagger';
-import { Notification } from '@prisma/client';
 import { NotificationDTO } from './notification-dto';
 
 export class CreateNotificationResponseBody implements ResponseWithModel {
@@ -8,5 +7,5 @@ export class CreateNotificationResponseBody implements ResponseWithModel {
   message: string;
 
   @ApiProperty({ type: NotificationDTO })
-  model: Notification;
+  model: NotificationDTO;
 }

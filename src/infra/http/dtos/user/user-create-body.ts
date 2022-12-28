@@ -1,10 +1,8 @@
+import { User } from '@infra/database/typeorm/entities';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '@prisma/client';
 import { IsNotEmpty, IsString, Length, Matches } from 'class-validator';
 
-export class UserCreateBody
-  implements Omit<User, 'id' | 'createdAt' | 'deletedAt'>
-{
+export class UserCreateBody implements Pick<User, 'username' | 'password'> {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({

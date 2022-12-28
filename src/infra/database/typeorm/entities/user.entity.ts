@@ -1,11 +1,18 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  DeleteDateColumn,
 } from 'typeorm';
+import { Notification } from './notification.entity';
+
+type RequiredField = 'username' | 'password';
+
+export type UserCreateInput = Pick<User, RequiredField> &
+  Partial<Omit<User, RequiredField>>;
 
 @Entity()
 export class User {
@@ -15,7 +22,7 @@ export class User {
   @Column()
   username: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @CreateDateColumn()
@@ -24,9 +31,9 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // TODO ver uma forma de implementar soft delete (esse tem rsrs)
   @DeleteDateColumn()
-  deletedAt: Date;
+  deletedAt: Date | null;
 
-  // TODO one to many with notifications
+  @OneToMany(() => Notification, (notification) => notification.user)
+  notifications: Notification[];
 }

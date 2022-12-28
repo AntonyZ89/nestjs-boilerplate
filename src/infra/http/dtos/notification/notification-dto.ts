@@ -1,7 +1,7 @@
+import { Notification } from '@infra/database/typeorm/entities';
 import { ApiProperty } from '@nestjs/swagger';
-import { Notification } from '@prisma/client';
 
-export class NotificationDTO implements Notification {
+export class NotificationDTO implements Omit<Notification, 'user'> {
   @ApiProperty()
   id: number;
 
@@ -20,8 +20,11 @@ export class NotificationDTO implements Notification {
   @ApiProperty({ type: 'string', format: 'date-time', nullable: true })
   canceledAt: Date | null;
 
-  @ApiProperty()
+  @ApiProperty({ type: 'string', format: 'date-time' })
   createdAt: Date;
+
+  @ApiProperty({ type: 'string', format: 'date-time' })
+  updatedAt: Date;
 
   @ApiProperty({ type: 'string', format: 'date-time', nullable: true })
   deletedAt: Date | null;

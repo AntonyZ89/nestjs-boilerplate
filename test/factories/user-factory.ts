@@ -1,8 +1,8 @@
-import { Prisma } from '@prisma/client';
+import { User } from '@infra/database/typeorm/entities';
 
-type ArgsType = Partial<Prisma.UserCreateInput>;
+type ArgsType = Partial<Omit<User, 'id'>>;
 
-export function makeUser(args: ArgsType = {}): Prisma.UserCreateInput {
+export function makeUser(args: ArgsType = {}): User {
   return {
     username: 'Antony',
     password: '10203040',

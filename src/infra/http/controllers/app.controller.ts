@@ -27,9 +27,9 @@ import {
   LoginResponse,
   UnauthorizedBody,
   UserCreateBody,
+  UserCreateResponse,
   UserWithNotificationsDTO,
 } from '../dtos';
-import { UserCreateResponse } from '../dtos/user/user-create-response';
 
 @Controller()
 @ApiTags(SwaggerTags.AUTH)

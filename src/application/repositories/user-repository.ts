@@ -1,13 +1,14 @@
 import { UserWithNotifications } from '@/types';
+import { User, UserCreateInput } from '@infra/database/typeorm/entities';
 
-export abstract class UserRepository<T = any> {
-  abstract create(user: any): Promise<T>;
-  abstract findById(userId: number): Promise<T | null>;
+export abstract class UserRepository {
+  abstract create(user: UserCreateInput): Promise<User>;
+  abstract findById(userId: number): Promise<User | null>;
   abstract findByIdWithNotifications(
     userId: number,
   ): Promise<UserWithNotifications | null>;
-  abstract findByUsername(name: string): Promise<T | null>;
-  abstract findMany(): Promise<Array<T>>;
-  abstract save(userId: number, data: any): Promise<void>;
+  abstract findByUsername(name: string): Promise<User | null>;
+  abstract findMany(): Promise<Array<User>>;
+  abstract save(userId: number, data: Partial<User>): Promise<void>;
   abstract delete(userId: number): Promise<void>;
 }

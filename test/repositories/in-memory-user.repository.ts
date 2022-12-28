@@ -4,18 +4,18 @@ import {
   UserRepository,
 } from '@application/repositories';
 import { UserNotFound } from '@application/use-cases/errors';
-import { Prisma, User } from '@prisma/client';
+import { User } from '@infra/database/typeorm/entities';
 
 export class InMemoryUserRepository implements UserRepository {
   constructor(private notificationRepository: NotificationRepository) {}
 
   public users: Array<User> = [];
 
-  async create(user: Prisma.UserCreateInput): Promise<User> {
+  async create(user: User): Promise<User> {
     const payload: User = {
       id: this.users.length + 1,
       ...user,
-      createdAt: this.#handleDate(user.createdAt) as Date,
+      createdAt: this.#handleDate(user.createdAt || new Date()) as Date,
       deletedAt: this.#handleDate(user.deletedAt),
     };
 

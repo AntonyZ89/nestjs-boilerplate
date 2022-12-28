@@ -1,6 +1,6 @@
 import { NotificationRepository } from '@application/repositories';
+import { Notification } from '@infra/database/typeorm/entities';
 import { Injectable } from '@nestjs/common';
-import { Notification } from '@prisma/client';
 
 interface GetUserNotificationRequest {
   userId: number;

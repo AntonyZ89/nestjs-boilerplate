@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../entities';
+import { User, UserCreateInput } from '../entities';
 import { UserRepository } from '@application/repositories';
 import { UserWithNotifications } from '@/types';
 
 @Injectable()
-export class TypeOrmUserRepository implements UserRepository<User> {
+export class TypeOrmUserRepository implements UserRepository {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
   ) {}
 
-  create(user: User): Promise<User> {
+  create(user: UserCreateInput): Promise<User> {
     return this.userRepository.save(user);
   }
 
@@ -23,7 +23,10 @@ export class TypeOrmUserRepository implements UserRepository<User> {
   findByIdWithNotifications(
     userId: number,
   ): Promise<UserWithNotifications | null> {
-    throw new Error('Method not implemented.');
+    return this.userRepository.findOne({
+      where: { id: userId },
+      relations: { notifications: true },
+    });
   }
 
   findByUsername(name: string): Promise<User | null> {
@@ -34,7 +37,7 @@ export class TypeOrmUserRepository implements UserRepository<User> {
     return this.userRepository.find();
   }
 
-  async save(userId: number, data: any): Promise<void> {
+  async save(userId: number, data: Partial<User>): Promise<void> {
     await this.userRepository.update({ id: userId }, data);
   }
 

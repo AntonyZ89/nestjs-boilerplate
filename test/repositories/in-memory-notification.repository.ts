@@ -1,25 +1,17 @@
 import { NotificationRepository } from '@application/repositories';
 import { NotificationNotFound } from '@application/use-cases/errors';
-import { Notification, Prisma } from '@prisma/client';
-
-interface NotificationCreate extends Prisma.NotificationCreateInput {
-  user: {
-    connect: { id: number };
-  };
-}
+import { Notification } from '@infra/database/typeorm/entities';
 
 export class InMemoryNotificationRepository implements NotificationRepository {
   public notifications: Array<Notification> = [];
 
-  async create(notification: NotificationCreate): Promise<Notification> {
+  async create(notification: Notification): Promise<Notification> {
     const payload = {
       id: this.notifications.length + 1,
-      userId: notification.user.connect.id,
-      content: notification.content,
-      category: notification.category,
+      ...notification,
       readAt: this.#handleDate(notification.readAt),
       canceledAt: this.#handleDate(notification.canceledAt),
-      createdAt: this.#handleDate(notification.createdAt) as Date,
+      createdAt: this.#handleDate(notification.createdAt || new Date()) as Date,
       deletedAt: this.#handleDate(notification.deletedAt),
     };
 
