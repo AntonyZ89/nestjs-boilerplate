@@ -4,18 +4,20 @@ import {
   UserRepository,
 } from '@application/repositories';
 import { UserNotFound } from '@application/use-cases/errors';
-import { User } from '@infra/database/typeorm/entities';
+import { User, UserCreateInput } from '@infra/database/typeorm/entities';
 
 export class InMemoryUserRepository implements UserRepository {
   constructor(private notificationRepository: NotificationRepository) {}
 
   public users: Array<User> = [];
 
-  async create(user: User): Promise<User> {
+  async create(user: UserCreateInput): Promise<User> {
     const payload: User = {
       id: this.users.length + 1,
+      notifications: [],
       ...user,
       createdAt: this.#handleDate(user.createdAt || new Date()) as Date,
+      updatedAt: this.#handleDate(user.updatedAt || new Date()) as Date,
       deletedAt: this.#handleDate(user.deletedAt),
     };
 

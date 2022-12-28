@@ -1,17 +1,21 @@
 import { NotificationRepository } from '@application/repositories';
 import { NotificationNotFound } from '@application/use-cases/errors';
-import { Notification } from '@infra/database/typeorm/entities';
+import {
+  Notification,
+  NotificationCreateInput,
+} from '@infra/database/typeorm/entities';
 
 export class InMemoryNotificationRepository implements NotificationRepository {
   public notifications: Array<Notification> = [];
 
-  async create(notification: Notification): Promise<Notification> {
+  async create(notification: NotificationCreateInput): Promise<Notification> {
     const payload = {
       id: this.notifications.length + 1,
       ...notification,
       readAt: this.#handleDate(notification.readAt),
       canceledAt: this.#handleDate(notification.canceledAt),
       createdAt: this.#handleDate(notification.createdAt || new Date()) as Date,
+      updatedAt: this.#handleDate(notification.updatedAt || new Date()) as Date,
       deletedAt: this.#handleDate(notification.deletedAt),
     };
 

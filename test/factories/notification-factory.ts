@@ -1,10 +1,10 @@
-import { Notification } from '@infra/database/typeorm/entities';
+import { NotificationCreateInput } from '@infra/database/typeorm/entities';
 
-type ArgsType = Partial<Omit<Notification, 'id' | 'userId'>> & {
+type ArgsType = Partial<NotificationCreateInput> & {
   userId: number;
 };
 
-export function makeNotification(args: ArgsType): Notification {
+export function makeNotification(args: ArgsType): NotificationCreateInput {
   return {
     category: 'gift',
     content: 'you received a new gift',

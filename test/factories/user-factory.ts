@@ -1,8 +1,8 @@
-import { User } from '@infra/database/typeorm/entities';
+import { UserCreateInput } from '@infra/database/typeorm/entities';
 
-type ArgsType = Partial<Omit<User, 'id'>>;
+type ArgsType = Partial<UserCreateInput>;
 
-export function makeUser(args: ArgsType = {}): User {
+export function makeUser(args: ArgsType = {}): UserCreateInput {
   return {
     username: 'Antony',
     password: '10203040',

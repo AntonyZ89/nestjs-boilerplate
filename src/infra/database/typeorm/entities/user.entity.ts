@@ -11,7 +11,7 @@ import { Notification } from './notification.entity';
 
 type RequiredField = 'username' | 'password';
 
-export type UserCreateInput = Pick<User, RequiredField> &
+export type UserCreateInput = Required<Pick<User, RequiredField>> &
   Partial<Omit<User, RequiredField>>;
 
 @Entity()
