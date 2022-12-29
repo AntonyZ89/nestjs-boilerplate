@@ -22,8 +22,6 @@ export class CreateUser {
 
     const user = await this.userRepository.create(request);
 
-    const { password, ...rest } = user;
-
-    return { user: rest };
+    return { user };
   }
 }

@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -16,6 +17,10 @@ export type NotificationCreateInput = Pick<Notification, RequiredField> &
 
 @Entity()
 export class Notification {
+  constructor(params: NotificationCreateInput) {
+    Object.assign(this, params);
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -48,5 +53,6 @@ export class Notification {
    */
 
   @ManyToOne(() => User, (user) => user.notifications)
+  @JoinColumn()
   user?: User;
 }

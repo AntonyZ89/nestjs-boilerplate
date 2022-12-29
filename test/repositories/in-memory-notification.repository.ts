@@ -9,7 +9,7 @@ export class InMemoryNotificationRepository implements NotificationRepository {
   public notifications: Array<Notification> = [];
 
   async create(notification: NotificationCreateInput): Promise<Notification> {
-    const payload = {
+    const payload = new Notification({
       id: this.notifications.length + 1,
       ...notification,
       readAt: this.#handleDate(notification.readAt),
@@ -17,7 +17,7 @@ export class InMemoryNotificationRepository implements NotificationRepository {
       createdAt: this.#handleDate(notification.createdAt || new Date()) as Date,
       updatedAt: this.#handleDate(notification.updatedAt || new Date()) as Date,
       deletedAt: this.#handleDate(notification.deletedAt),
-    };
+    });
 
     this.notifications.unshift(payload);
 

@@ -24,10 +24,12 @@ export class TypeOrmUserRepository implements UserRepository {
   findByIdWithNotifications(
     userId: number,
   ): Promise<UserWithNotifications | null> {
-    return this.userRepository.findOne({
+    const result = this.userRepository.findOne({
       where: { id: userId },
       relations: { notifications: true },
     });
+
+    return result as Promise<UserWithNotifications | null>;
   }
 
   findByUsername(name: string): Promise<User | null> {

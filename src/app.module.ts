@@ -2,8 +2,8 @@ import { AuthModule } from '@infra/auth/auth.module';
 import { JwtAuthGuard } from '@infra/auth/guards';
 import { DatabaseModule } from '@infra/database/database.module';
 import { HttpModule } from '@infra/http/httpd.module';
-import { Module } from '@nestjs/common';
-import { APP_GUARD } from '@nestjs/core';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 // TODO type envs
@@ -30,6 +30,10 @@ const env = process.env;
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
     },
   ],
 })

@@ -12,14 +12,14 @@ export class InMemoryUserRepository implements UserRepository {
   public users: Array<User> = [];
 
   async create(user: UserCreateInput): Promise<User> {
-    const payload: User = {
+    const payload = new User({
       id: this.users.length + 1,
       notifications: [],
       ...user,
       createdAt: this.#handleDate(user.createdAt || new Date()) as Date,
       updatedAt: this.#handleDate(user.updatedAt || new Date()) as Date,
       deletedAt: this.#handleDate(user.deletedAt),
-    };
+    });
 
     this.users.unshift(payload);
 

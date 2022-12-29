@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
   Column,
   CreateDateColumn,
@@ -16,14 +17,19 @@ export type UserCreateInput = Required<Pick<User, RequiredField>> &
 
 @Entity()
 export class User {
+  constructor(params: UserCreateInput) {
+    Object.assign(this, params);
+  }
+
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ unique: true })
   username: string;
 
-  @Column({ select: false })
-  password?: string;
+  @Column()
+  @Exclude()
+  password: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -39,5 +45,5 @@ export class User {
    */
 
   @OneToMany(() => Notification, (notification) => notification.user)
-  notifications: Notification[];
+  notifications?: Notification[];
 }

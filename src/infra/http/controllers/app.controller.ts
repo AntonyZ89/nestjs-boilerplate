@@ -73,8 +73,6 @@ export class AppController {
       req.user!.id,
     );
 
-    const { password, ...rest } = user!;
-
-    return rest;
+    return user!;
   }
 }
