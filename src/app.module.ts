@@ -3,14 +3,15 @@ import { JwtAuthGuard } from '@infra/auth/guards';
 import { DatabaseModule } from '@infra/database/database.module';
 import { HttpModule } from '@infra/http/httpd.module';
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-// TODO type envs
 const env = process.env;
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: env.POSTGRES_HOST,
