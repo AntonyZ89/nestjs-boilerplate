@@ -1,6 +1,6 @@
 import { SwaggerTags } from '@/enums';
 import { UserRepository } from '@application/repositories';
-import { CreateUser } from '@application/use-cases/user';
+import { CreateUser, UpdateUser } from '@application/use-cases/user';
 import { AuthService } from '@infra/auth/auth.service';
 import { LocalAuthGuard } from '@infra/auth/guards';
 import { Public } from '@infra/http/decorators';
@@ -9,6 +9,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -25,9 +26,11 @@ import {
   BadRequestBody,
   LoginBody,
   LoginResponse,
+  ResponseBody,
   UnauthorizedBody,
   UserCreateBody,
   UserCreateResponse,
+  UserUpdateBody,
   UserWithNotificationsDTO,
 } from '../dtos';
 
@@ -36,8 +39,9 @@ import {
 export class AppController {
   constructor(
     private authService: AuthService,
-    private createUser: CreateUser,
     private userRepository: UserRepository,
+    private createUser: CreateUser,
+    private updateUser: UpdateUser,
   ) {}
 
   @Post('auth/login')
@@ -66,7 +70,7 @@ export class AppController {
   @Get('profile')
   @ApiOkResponse({ type: UserWithNotificationsDTO })
   @ApiBearerAuth()
-  async profile(
+  async getProfile(
     @Request() req: RequestType,
   ): Promise<UserWithNotificationsDTO> {
     const user = await this.userRepository.findByIdWithNotifications(
@@ -74,5 +78,24 @@ export class AppController {
     );
 
     return user!;
+  }
+
+  @Put('profile')
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: ResponseBody })
+  @ApiBody({ type: UserUpdateBody })
+  @ApiBadRequestResponse({ type: BadRequestBody })
+  async updateProfile(
+    @Request() req: RequestType,
+    @Body() body: UserUpdateBody,
+  ): Promise<ResponseBody> {
+    await this.updateUser.execute({
+      userId: req.user!.id,
+      data: body,
+    });
+
+    return {
+      message: 'Atualizado com sucesso',
+    };
   }
 }

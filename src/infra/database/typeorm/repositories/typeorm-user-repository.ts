@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserCreateInput } from '../entities';
+import { UserNotFound } from '@application/use-cases/errors';
 
 @Injectable()
 export class TypeOrmUserRepository implements UserRepository {
@@ -43,7 +44,13 @@ export class TypeOrmUserRepository implements UserRepository {
   }
 
   async save(userId: number, data: Partial<User>): Promise<void> {
-    await this.userRepository.update({ id: userId }, data);
+    const user = await this.userRepository.findOneByOrFail({ id: userId });
+
+    if (!user) throw new UserNotFound();
+
+    user.load(data);
+
+    await this.userRepository.update({ id: userId }, user);
   }
 
   async delete(userId: number): Promise<void> {

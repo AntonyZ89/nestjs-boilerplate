@@ -6,7 +6,7 @@ import {
   SendNotification,
   UnreadNotification,
 } from '@application/use-cases/notification';
-import { CreateUser } from '@application/use-cases/user';
+import { CreateUser, UpdateUser } from '@application/use-cases/user';
 import { AuthModule } from '@infra/auth/auth.module';
 import { DatabaseModule } from '@infra/database/database.module';
 import { Module } from '@nestjs/common';
@@ -25,6 +25,7 @@ import { AppController, NotificationController } from './controllers';
     GetUserNotification,
     // user
     CreateUser,
+    UpdateUser,
   ],
 })
 export class HttpModule {}

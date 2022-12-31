@@ -23,7 +23,7 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
     const query = repository.createQueryBuilder().where({ [column]: value });
 
     if (entity.hasId()) {
-      query.andWhere({ id: Not(entity.getId()) });
+      query.andWhere({ id: Not(entity.id) });
     }
 
     return !(await query.getExists());

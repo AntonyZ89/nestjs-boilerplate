@@ -9,6 +9,10 @@ import {
 export abstract class BaseEntity extends TypeOrmBaseEntity {
   #errors: Record<string, string> = {};
 
+  load(params: Partial<this>): void {
+    Object.assign(this, params);
+  }
+
   beforeValidate(): void | Promise<void> {
     this.#errors = {};
   }
