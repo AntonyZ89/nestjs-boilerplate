@@ -4,11 +4,15 @@ import {
 } from '@application/repositories';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User, Notification } from './typeorm/entities';
+import { Notification, User } from './typeorm/entities';
 import {
-  TypeOrmUserRepository,
   TypeOrmNotificationRepository,
+  TypeOrmUserRepository,
 } from './typeorm/repositories';
+import { ExistConstraint } from './typeorm/helpers/decorators/exist.decorator';
+import { UniqueConstraint } from './typeorm/helpers/decorators/unique.decorator';
+
+const RULES = [ExistConstraint, UniqueConstraint];
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Notification])],
@@ -21,6 +25,7 @@ import {
       provide: UserRepository,
       useClass: TypeOrmUserRepository,
     },
+    ...RULES,
   ],
   exports: [TypeOrmModule, NotificationRepository, UserRepository],
 })

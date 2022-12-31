@@ -1,13 +1,10 @@
-import {
-  BadRequestException,
-  HttpStatus,
-  ValidationPipe,
-} from '@nestjs/common';
+import { ValidationException } from '@infra/exceptions';
+import { HttpStatus, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { SwaggerTags } from './enums';
-import { BadRequestResponse } from './types';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,6 +20,8 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   app.useGlobalPipes(generateValidationPipe());
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   await app.listen(3000);
 }
@@ -47,11 +46,10 @@ function generateValidationPipe() {
         }
       });
 
-      return new BadRequestException({
+      return new ValidationException({
         statusCode: this.errorHttpStatusCode || HttpStatus.BAD_REQUEST,
         errors: result,
-        message: 'Ocorreu um erro.',
-      } satisfies BadRequestResponse);
+      });
     },
   });
 }

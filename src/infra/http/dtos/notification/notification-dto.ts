@@ -1,7 +1,7 @@
 import { Notification } from '@infra/database/typeorm/entities';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class NotificationDTO implements Omit<Notification, 'user'> {
+export class NotificationDTO extends Notification {
   @ApiProperty()
   id: number;
 

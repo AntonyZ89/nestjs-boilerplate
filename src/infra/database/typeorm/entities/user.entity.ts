@@ -8,6 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { UniqueValidator } from '../helpers/decorators/unique.decorator';
+import { BaseEntity } from './base.entity';
 import { Notification } from './notification.entity';
 
 type RequiredField = 'username' | 'password';
@@ -16,8 +18,10 @@ export type UserCreateInput = Required<Pick<User, RequiredField>> &
   Partial<Omit<User, RequiredField>>;
 
 @Entity()
-export class User {
-  constructor(params: UserCreateInput) {
+export class User extends BaseEntity {
+  constructor(params?: UserCreateInput) {
+    super();
+
     Object.assign(this, params);
   }
 
@@ -25,6 +29,7 @@ export class User {
   id: number;
 
   @Column({ unique: true })
+  @UniqueValidator()
   username: string;
 
   @Column()

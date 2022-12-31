@@ -8,6 +8,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ExistValidator } from '../helpers/decorators/exist.decorator';
+import { BaseEntity } from './base.entity';
 import { User } from './user.entity';
 
 type RequiredField = 'userId' | 'content' | 'category';
@@ -16,8 +18,10 @@ export type NotificationCreateInput = Pick<Notification, RequiredField> &
   Partial<Omit<Notification, RequiredField>>;
 
 @Entity()
-export class Notification {
-  constructor(params: NotificationCreateInput) {
+export class Notification extends BaseEntity {
+  constructor(params?: NotificationCreateInput) {
+    super();
+
     Object.assign(this, params);
   }
 
@@ -25,6 +29,7 @@ export class Notification {
   id: number;
 
   @Column()
+  @ExistValidator(User)
   userId: number;
 
   @Column()

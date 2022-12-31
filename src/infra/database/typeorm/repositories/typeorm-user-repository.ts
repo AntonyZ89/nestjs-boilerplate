@@ -14,7 +14,9 @@ export class TypeOrmUserRepository implements UserRepository {
   ) {}
 
   create(user: UserCreateInput): Promise<User> {
-    return this.userRepository.save(user);
+    const model = this.userRepository.create(user);
+
+    return this.userRepository.save(model);
   }
 
   findById(userId: number): Promise<User | null> {

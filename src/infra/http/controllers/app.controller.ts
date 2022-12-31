@@ -3,7 +3,7 @@ import { UserRepository } from '@application/repositories';
 import { CreateUser } from '@application/use-cases/user';
 import { AuthService } from '@infra/auth/auth.service';
 import { LocalAuthGuard } from '@infra/auth/guards';
-import { Public } from '@infra/decorators';
+import { Public } from '@infra/http/decorators';
 import {
   Body,
   Controller,

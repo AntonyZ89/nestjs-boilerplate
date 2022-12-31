@@ -12,7 +12,9 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
   ) {}
 
   create(notification: NotificationCreateInput): Promise<Notification> {
-    return this.notificationRepository.save(notification);
+    const model = this.notificationRepository.create(notification);
+
+    return this.notificationRepository.save(model);
   }
 
   findById(notificationId: number): Promise<Notification | null> {
