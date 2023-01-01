@@ -4,6 +4,8 @@ import {
   Notification,
   NotificationCreateInput,
 } from '@infra/database/typeorm/entities';
+import { ValidationException } from '@infra/exceptions';
+import { isEmpty } from 'class-validator';
 
 export class InMemoryNotificationRepository implements NotificationRepository {
   public notifications: Array<Notification> = [];
@@ -18,6 +20,9 @@ export class InMemoryNotificationRepository implements NotificationRepository {
       updatedAt: this.#handleDate(notification.updatedAt || new Date()) as Date,
       deletedAt: this.#handleDate(notification.deletedAt),
     });
+
+    // validate payload, if validation fails, throw an error
+    this.#validateNotification({ data: payload });
 
     this.notifications.unshift(payload);
 
@@ -42,13 +47,15 @@ export class InMemoryNotificationRepository implements NotificationRepository {
   ): Promise<void> {
     const index = this.notifications.findIndex((n) => n.id === notificationId);
 
-    if (index !== -1) {
-      const oldData = this.notifications[index];
+    if (index === -1) throw new NotificationNotFound();
 
-      this.notifications[index] = Object.assign(oldData, data);
-    } else {
-      throw new NotificationNotFound();
-    }
+    const oldData = this.notifications[index];
+    const newData = Object.assign(oldData, data);
+
+    // validate new data, if validation fails, throw an error
+    this.#validateNotification({ data: newData });
+
+    this.notifications[index] = newData;
   }
 
   async findByUserId(userId: number): Promise<Notification[]> {
@@ -75,5 +82,35 @@ export class InMemoryNotificationRepository implements NotificationRepository {
     if (typeof date === 'string') return new Date(date);
 
     return null;
+  }
+
+  /**
+   * Validates the user data before saving it to the database.
+   *
+   * Only validations presents in User Entity
+   * @see User
+   */
+  #validateNotification({ data }: { data: Notification }) {
+    if (isEmpty(data.content)) {
+      throw new ValidationException({
+        errors: {
+          content: 'Content cannot be empty',
+        },
+      });
+    }
+
+    if (isEmpty(data.category)) {
+      throw new ValidationException({
+        errors: {
+          category: 'Category cannot be empty',
+        },
+      });
+    }
+
+    if (!data.userId) {
+      throw new ValidationException({
+        errors: { userId: 'userId is required' },
+      });
+    }
   }
 }

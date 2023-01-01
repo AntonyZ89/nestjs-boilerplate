@@ -5,6 +5,8 @@ import {
 } from '@application/repositories';
 import { UserNotFound } from '@application/use-cases/errors';
 import { User, UserCreateInput } from '@infra/database/typeorm/entities';
+import { ValidationException } from '@infra/exceptions';
+import { isEmpty } from 'class-validator';
 
 export class InMemoryUserRepository implements UserRepository {
   constructor(private notificationRepository: NotificationRepository) {}
@@ -20,6 +22,9 @@ export class InMemoryUserRepository implements UserRepository {
       updatedAt: this.#handleDate(user.updatedAt || new Date()) as Date,
       deletedAt: this.#handleDate(user.deletedAt),
     });
+
+    // validate data, if validation fails, throw an error
+    this.#validateUser({ data: payload });
 
     this.users.unshift(payload);
 
@@ -59,13 +64,15 @@ export class InMemoryUserRepository implements UserRepository {
   async save(userId: number, data: Partial<User>): Promise<void> {
     const index = this.users.findIndex((user) => user.id === userId);
 
-    if (index !== -1) {
-      const oldData = this.users[index];
+    if (index === -1) throw new UserNotFound();
 
-      this.users[index] = Object.assign(oldData, data);
-    } else {
-      throw new UserNotFound();
-    }
+    const oldData = this.users[index];
+    const newData = Object.assign(oldData, data);
+
+    // validate new data, if validation fails, throw an error
+    this.#validateUser({ userId, data: newData });
+
+    this.users[index] = newData;
   }
 
   async delete(userId: number): Promise<void> {
@@ -86,5 +93,45 @@ export class InMemoryUserRepository implements UserRepository {
     if (typeof date === 'string') return new Date(date);
 
     return null;
+  }
+
+  /**
+   * Validates the user data before saving it to the database.
+   *
+   * Only validations presents in User Entity
+   * @see User
+   */
+  #validateUser({ userId, data }: { userId?: number; data: User }) {
+    // required username
+    if (isEmpty(data.username)) {
+      throw new ValidationException({
+        errors: { username: 'Username is required' },
+      });
+    }
+
+    // required password
+    if (isEmpty(data.password)) {
+      throw new ValidationException({
+        errors: { password: 'Password is required' },
+      });
+    }
+
+    // duplicated username
+    const duplicatedUsername = this.users.find((dbUser) => {
+      let condition = dbUser.username === data.username;
+
+      // exclude user if it is the same as the current user
+      if (userId) {
+        condition &&= dbUser.id !== userId;
+      }
+
+      return condition;
+    });
+
+    if (duplicatedUsername) {
+      throw new ValidationException({
+        errors: { username: 'Username already exists' },
+      });
+    }
   }
 }
