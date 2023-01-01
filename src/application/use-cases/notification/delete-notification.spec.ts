@@ -1,18 +1,23 @@
-import { makeNotification } from '@test/factories/notification-factory';
 import {
   InMemoryNotificationRepository,
   InMemoryUserRepository,
 } from '@test/repositories';
 import { NotificationNotFound } from '../errors';
 import { DeleteNotification } from './delete-notification';
-import { makeUser } from '@test/factories/user-factory';
+import { makeNotification, makeUser } from '@test/factories';
 
 describe('Delete notification', () => {
-  it('should be able to delete a notification', async () => {
-    const notificationRepository = new InMemoryNotificationRepository();
-    const userRepository = new InMemoryUserRepository(notificationRepository);
-    const deleteNotification = new DeleteNotification(notificationRepository);
+  let notificationRepository: InMemoryNotificationRepository;
+  let userRepository: InMemoryUserRepository;
+  let deleteNotification: DeleteNotification;
 
+  beforeAll(() => {
+    notificationRepository = new InMemoryNotificationRepository();
+    userRepository = new InMemoryUserRepository(notificationRepository);
+    deleteNotification = new DeleteNotification(notificationRepository);
+  });
+
+  it('should be able to delete a notification', async () => {
     const user = await userRepository.create(makeUser());
     const userId = user.id;
 
@@ -28,9 +33,6 @@ describe('Delete notification', () => {
   });
 
   it("should'nt be able to delete a notification who not exists", () => {
-    const notificationRepository = new InMemoryNotificationRepository();
-    const deleteNotification = new DeleteNotification(notificationRepository);
-
     expect(() =>
       deleteNotification.execute({ notificationId: 999 }),
     ).rejects.toThrow(NotificationNotFound);

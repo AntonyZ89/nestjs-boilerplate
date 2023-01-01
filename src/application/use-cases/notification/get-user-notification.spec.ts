@@ -1,5 +1,4 @@
-import { makeNotification } from '@test/factories/notification-factory';
-import { makeUser } from '@test/factories/user-factory';
+import { makeNotification, makeUser } from '@test/factories';
 import {
   InMemoryNotificationRepository,
   InMemoryUserRepository,
@@ -7,11 +6,17 @@ import {
 import { GetUserNotification } from './get-user-notification';
 
 describe('Get notification by userId', () => {
-  it('should be able to get notification list', async () => {
-    const notificationRepository = new InMemoryNotificationRepository();
-    const userRepository = new InMemoryUserRepository(notificationRepository);
-    const getUserNotification = new GetUserNotification(notificationRepository);
+  let notificationRepository: InMemoryNotificationRepository;
+  let userRepository: InMemoryUserRepository;
+  let getUserNotification: GetUserNotification;
 
+  beforeAll(() => {
+    notificationRepository = new InMemoryNotificationRepository();
+    userRepository = new InMemoryUserRepository(notificationRepository);
+    getUserNotification = new GetUserNotification(notificationRepository);
+  });
+
+  it('should be able to get notification list', async () => {
     const user = await userRepository.create(makeUser());
     const userId = user.id;
 
@@ -30,9 +35,6 @@ describe('Get notification by userId', () => {
   });
 
   it("should'nt be able to get notification list", async () => {
-    const notificationRepository = new InMemoryNotificationRepository();
-    const getUserNotification = new GetUserNotification(notificationRepository);
-
     const { notifications } = await getUserNotification.execute({
       userId: 999,
     });

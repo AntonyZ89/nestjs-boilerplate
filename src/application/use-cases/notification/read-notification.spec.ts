@@ -1,18 +1,23 @@
+import { makeNotification, makeUser } from '@test/factories';
 import {
   InMemoryNotificationRepository,
   InMemoryUserRepository,
 } from '@test/repositories';
-import { ReadNotification } from './read-notification';
-import { makeNotification } from '@test/factories/notification-factory';
 import { NotificationNotFound } from '../errors';
-import { makeUser } from '@test/factories/user-factory';
+import { ReadNotification } from './read-notification';
 
 describe('Read notification', () => {
-  it('should be able to read a notification', async () => {
-    const notificationRepository = new InMemoryNotificationRepository();
-    const userRepository = new InMemoryUserRepository(notificationRepository);
-    const readNotification = new ReadNotification(notificationRepository);
+  let notificationRepository: InMemoryNotificationRepository;
+  let userRepository: InMemoryUserRepository;
+  let readNotification: ReadNotification;
 
+  beforeAll(() => {
+    notificationRepository = new InMemoryNotificationRepository();
+    userRepository = new InMemoryUserRepository(notificationRepository);
+    readNotification = new ReadNotification(notificationRepository);
+  });
+
+  it('should be able to read a notification', async () => {
     const user = await userRepository.create(makeUser());
     const userId = user.id;
 
@@ -26,9 +31,6 @@ describe('Read notification', () => {
   });
 
   it("should'nt be able to read a notification who not exists", () => {
-    const notificationRepository = new InMemoryNotificationRepository();
-    const readNotification = new ReadNotification(notificationRepository);
-
     expect(() =>
       readNotification.execute({ notificationId: 999 }),
     ).rejects.toThrow(NotificationNotFound);

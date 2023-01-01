@@ -1,9 +1,9 @@
+import { makeUser } from '@test/factories';
 import {
   InMemoryNotificationRepository,
   InMemoryUserRepository,
 } from '@test/repositories';
 import { SendNotification } from './send-notification';
-import { makeUser } from '@test/factories/user-factory';
 
 describe('Send notification', () => {
   it('should be able to send a notification', async () => {
