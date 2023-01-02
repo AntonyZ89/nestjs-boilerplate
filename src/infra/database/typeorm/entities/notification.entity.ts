@@ -38,10 +38,10 @@ export class Notification extends BaseEntity {
   @Column()
   category: string;
 
-  @Column({ type: 'timestamptz', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   readAt: Date | null;
 
-  @Column({ type: 'timestamptz', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   canceledAt: Date | null;
 
   @CreateDateColumn()

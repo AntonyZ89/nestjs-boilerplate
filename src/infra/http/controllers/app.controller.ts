@@ -8,6 +8,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Post,
   Put,
   Request,
@@ -45,6 +47,7 @@ export class AppController {
   ) {}
 
   @Post('auth/login')
+  @HttpCode(HttpStatus.OK)
   @Public()
   @UseGuards(LocalAuthGuard)
   @ApiBody({ type: LoginBody })
@@ -59,10 +62,9 @@ export class AppController {
   @ApiOkResponse({ type: UserCreateResponse })
   @ApiBadRequestResponse({ type: BadRequestBody })
   async signup(@Body() body: UserCreateBody): Promise<UserCreateResponse> {
-    const { user } = await this.createUser.execute(body);
+    await this.createUser.execute(body);
 
     return {
-      model: user,
       message: 'Cadastrado com sucesso.',
     };
   }

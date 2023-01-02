@@ -29,11 +29,14 @@ import {
 } from '@nestjs/swagger';
 import {
   BadRequestBody,
+  CancelNotificationBody,
   CreateNotificationBody,
   CreateNotificationResponseBody,
   NotFoundBody,
   NotificationDTO,
+  ReadNotificationBody,
   ResponseBody,
+  UnreadNotificationBody,
 } from '../dtos';
 
 @ApiBearerAuth()
@@ -104,10 +107,15 @@ export class NotificationController {
     type: ResponseBody,
   })
   @ApiNotFoundResponse({ type: NotFoundBody })
-  async cancel(@Param('id', ParseIntPipe) id: number): Promise<ResponseBody> {
-    await this.cancelNotification.execute({ notificationId: id });
+  async cancel(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<CancelNotificationBody> {
+    const { notification } = await this.cancelNotification.execute({
+      notificationId: id,
+    });
 
     return {
+      model: notification,
       message: 'Cancelado com sucesso.',
     };
   }
@@ -136,10 +144,15 @@ export class NotificationController {
     type: ResponseBody,
   })
   @ApiNotFoundResponse({ type: NotFoundBody })
-  async read(@Param('id', ParseIntPipe) id: number): Promise<ResponseBody> {
-    await this.readNotification.execute({ notificationId: id });
+  async read(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ReadNotificationBody> {
+    const { notification } = await this.readNotification.execute({
+      notificationId: id,
+    });
 
     return {
+      model: notification,
       message: 'Marcado como lido com sucesso',
     };
   }
@@ -151,10 +164,15 @@ export class NotificationController {
     type: ResponseBody,
   })
   @ApiNotFoundResponse({ type: NotFoundBody })
-  async unread(@Param('id', ParseIntPipe) id: number): Promise<ResponseBody> {
-    await this.unreadNotification.execute({ notificationId: id });
+  async unread(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<UnreadNotificationBody> {
+    const { notification } = await this.unreadNotification.execute({
+      notificationId: id,
+    });
 
     return {
+      model: notification,
       message: 'Marcado como não lido com sucesso',
     };
   }
