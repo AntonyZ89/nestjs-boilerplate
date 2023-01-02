@@ -8,7 +8,7 @@ export default {
     '@enums/(.*)': '<rootDir>/enums/$1',
     '@test/(.*)': '<rootDir>/../test/$1',
     '@/(.*)': '<rootDir>/$1',
-    '~/(.*)': '<rootDir>/$1',
+    '~/(.*)': '<rootDir>/../$1',
   },
   rootDir: './src',
   testRegex: '.*\\.spec\\.ts$',
