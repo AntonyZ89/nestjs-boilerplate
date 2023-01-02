@@ -1,12 +1,15 @@
 import { NotificationRepository } from '@application/repositories';
 import { Injectable } from '@nestjs/common';
 import { NotificationNotFound } from '../errors';
+import { Notification } from '@infra/database/typeorm/entities';
 
 interface CancelNotificationRequest {
   notificationId: number;
 }
 
-type CancelNotificationResponse = void;
+interface CancelNotificationResponse {
+  notification: Notification;
+}
 
 @Injectable()
 export class CancelNotification {
@@ -26,5 +29,7 @@ export class CancelNotification {
     notification.canceledAt = new Date();
 
     await this.notificationRepository.save(notification.id, notification);
+
+    return { notification };
   }
 }

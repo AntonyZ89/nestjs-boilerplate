@@ -6,6 +6,7 @@ import {
 } from '@test/repositories';
 import { NotificationNotFound } from '../errors';
 import { CancelNotification } from './cancel-notification';
+import { Notification } from '@infra/database/typeorm/entities';
 
 describe('Cancel notification', () => {
   let notificationRepository: InMemoryNotificationRepository;
@@ -26,11 +27,13 @@ describe('Cancel notification', () => {
       makeNotification({ userId, readAt: new Date() }),
     );
 
-    await cancelNotification.execute({ notificationId: notification.id });
+    const { notification: n } = await cancelNotification.execute({
+      notificationId: notification.id,
+    });
 
-    expect(notificationRepository.notifications[0].canceledAt).toBeInstanceOf(
-      Date,
-    );
+    expect(n).toBeInstanceOf(Notification);
+    expect(n.id).toEqual(notification.id);
+    expect(n.canceledAt).toBeInstanceOf(Date);
   });
 
   it("should'nt be able to cancel a notification who not exists", () => {

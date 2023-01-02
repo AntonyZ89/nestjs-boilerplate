@@ -25,9 +25,11 @@ describe('Read notification', () => {
       makeNotification({ userId, readAt: new Date() }),
     );
 
-    await readNotification.execute({ notificationId: notification.id });
+    const { notification: n } = await readNotification.execute({
+      notificationId: notification.id,
+    });
 
-    expect(notificationRepository.notifications[0].readAt).toBeInstanceOf(Date);
+    expect(n.readAt).toBeInstanceOf(Date);
   });
 
   it("should'nt be able to read a notification who not exists", () => {

@@ -1,12 +1,15 @@
 import { NotificationRepository } from '@application/repositories';
 import { Injectable } from '@nestjs/common';
 import { NotificationNotFound } from '../errors';
+import { Notification } from '@infra/database/typeorm/entities';
 
 interface UnreadNotificationRequest {
   notificationId: number;
 }
 
-type UnreadNotificationResponse = void;
+interface UnreadNotificationResponse {
+  notification: Notification;
+}
 
 @Injectable()
 export class UnreadNotification {
@@ -26,5 +29,7 @@ export class UnreadNotification {
     notification.readAt = null;
 
     await this.notificationRepository.save(notification.id, notification);
+
+    return { notification };
   }
 }

@@ -1,12 +1,15 @@
 import { NotificationRepository } from '@application/repositories';
 import { Injectable } from '@nestjs/common';
 import { NotificationNotFound } from '../errors';
+import { Notification } from '@infra/database/typeorm/entities';
 
 interface ReadNotificationRequest {
   notificationId: number;
 }
 
-type ReadNotificationResponse = void;
+interface ReadNotificationResponse {
+  notification: Notification;
+}
 
 @Injectable()
 export class ReadNotification {
@@ -26,5 +29,7 @@ export class ReadNotification {
     notification.readAt = new Date();
 
     await this.notificationRepository.save(notification.id, notification);
+
+    return { notification };
   }
 }

@@ -27,9 +27,11 @@ describe('Unread notification', () => {
 
     expect(notificationRepository.notifications[0].readAt).toBeInstanceOf(Date);
 
-    await unreadNotification.execute({ notificationId: notification.id });
+    const { notification: n } = await unreadNotification.execute({
+      notificationId: notification.id,
+    });
 
-    expect(notificationRepository.notifications[0].readAt).toBeNull();
+    expect(n.readAt).toBeNull();
   });
 
   it("should'nt be able to unread a notification who not exists", () => {
