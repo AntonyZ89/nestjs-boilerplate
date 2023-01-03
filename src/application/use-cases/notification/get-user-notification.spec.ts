@@ -24,9 +24,13 @@ describe('Get notification by userId', () => {
     notificationRepository.create(makeNotification({ userId }));
     notificationRepository.create(makeNotification({ userId: userId + 1 }));
 
-    const { notifications } = await getUserNotification.execute({ userId });
+    const { notifications } = await getUserNotification.execute({
+      userId,
+      page: 1,
+      limit: 10,
+    });
 
-    expect(notifications).toEqual(
+    expect(notifications.items).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ userId }),
         expect.objectContaining({ userId }),
@@ -37,8 +41,10 @@ describe('Get notification by userId', () => {
   it("should'nt be able to get notification list", async () => {
     const { notifications } = await getUserNotification.execute({
       userId: 999,
+      page: 1,
+      limit: 10,
     });
 
-    expect(notifications).toHaveLength(0);
+    expect(notifications.items).toHaveLength(0);
   });
 });

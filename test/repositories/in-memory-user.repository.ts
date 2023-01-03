@@ -6,7 +6,14 @@ import {
 import { UserNotFound } from '@application/use-cases/errors';
 import { User, UserCreateInput } from '@infra/database/typeorm/entities';
 import { ValidationException } from '@infra/exceptions';
+import { makePagination } from '@test/factories';
 import { isEmpty } from 'class-validator';
+import {
+  IPaginationMeta,
+  IPaginationOptions,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
+import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 
 export class InMemoryUserRepository implements UserRepository {
   constructor(private notificationRepository: NotificationRepository) {}
@@ -81,6 +88,16 @@ export class InMemoryUserRepository implements UserRepository {
     if (index !== -1) {
       this.users.splice(index, 1);
     }
+  }
+
+  async paginate(
+    options: IPaginationOptions<IPaginationMeta>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    searchOptions?: FindOptionsWhere<User> | FindManyOptions<User>,
+  ): Promise<Pagination<User>> {
+    const items = await this.findMany();
+
+    return makePagination(items, options);
   }
 
   /*

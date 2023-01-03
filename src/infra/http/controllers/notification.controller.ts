@@ -11,12 +11,14 @@ import {
 import {
   Body,
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -33,7 +35,8 @@ import {
   CreateNotificationBody,
   CreateNotificationResponseBody,
   NotFoundBody,
-  NotificationDTO,
+  NotificationFromUserDTO,
+  NotificationListDTO,
   ReadNotificationBody,
   ResponseBody,
   UnreadNotificationBody,
@@ -57,11 +60,13 @@ export class NotificationController {
   @ApiOperation({ summary: 'Returns a list of all notifications.' })
   @ApiOkResponse({
     description: 'Returns a list of all notifications.',
-    type: NotificationDTO,
-    isArray: true,
+    type: NotificationListDTO,
   })
-  list(): Promise<Array<NotificationDTO>> {
-    return this.notificationRepository.findMany();
+  list(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ): Promise<NotificationListDTO> {
+    return this.notificationRepository.paginate({ page, limit });
   }
 
   @Post()
@@ -124,14 +129,17 @@ export class NotificationController {
   @ApiOperation({ summary: 'Returns a list of notifications for a user.' })
   @ApiOkResponse({
     description: 'Returns a list of notifications for a user.',
-    type: NotificationDTO,
-    isArray: true,
+    type: NotificationFromUserDTO,
   })
   async getFromUser(
     @Param('user_id', ParseIntPipe) userId: number,
-  ): Promise<Array<NotificationDTO>> {
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ): Promise<NotificationFromUserDTO> {
     const { notifications } = await this.getUserNotification.execute({
       userId,
+      page,
+      limit,
     });
 
     return notifications;

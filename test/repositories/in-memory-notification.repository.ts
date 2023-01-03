@@ -5,7 +5,14 @@ import {
   NotificationCreateInput,
 } from '@infra/database/typeorm/entities';
 import { ValidationException } from '@infra/exceptions';
+import { makePagination } from '@test/factories';
 import { isEmpty } from 'class-validator';
+import {
+  IPaginationMeta,
+  IPaginationOptions,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
+import { FindManyOptions, FindOptionsWhere } from 'typeorm';
 
 export class InMemoryNotificationRepository implements NotificationRepository {
   public notifications: Array<Notification> = [];
@@ -72,6 +79,25 @@ export class InMemoryNotificationRepository implements NotificationRepository {
     }
   }
 
+  async paginate(
+    options: IPaginationOptions<IPaginationMeta>,
+    searchOptions?:
+      | FindOptionsWhere<Notification>
+      | FindManyOptions<Notification>,
+  ): Promise<Pagination<Notification>> {
+    let items = await this.findMany();
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (searchOptions && searchOptions.where) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      items = items.filter((item) => item.id === searchOptions.where.userId);
+    }
+
+    return makePagination(items, options);
+  }
+
   /*
    * Utils
    */
@@ -93,17 +119,13 @@ export class InMemoryNotificationRepository implements NotificationRepository {
   #validateNotification({ data }: { data: Notification }) {
     if (isEmpty(data.content)) {
       throw new ValidationException({
-        errors: {
-          content: 'Content cannot be empty',
-        },
+        errors: { content: 'Content cannot be empty' },
       });
     }
 
     if (isEmpty(data.category)) {
       throw new ValidationException({
-        errors: {
-          category: 'Category cannot be empty',
-        },
+        errors: { category: 'Category cannot be empty' },
       });
     }
 

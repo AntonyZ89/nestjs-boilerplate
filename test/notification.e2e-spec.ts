@@ -2,11 +2,12 @@ import {
   CancelNotificationBody,
   CreateNotificationBody,
   LoginResponse,
-  NotificationDTO,
+  NotificationFromUserDTO,
   ReadNotificationBody,
   UnreadNotificationBody,
 } from '@infra/http/dtos';
 import { HttpStatus, INestApplication } from '@nestjs/common';
+import { IPaginationMeta } from 'nestjs-typeorm-paginate';
 import * as request from 'supertest';
 import { createApp } from './helpers';
 
@@ -167,10 +168,17 @@ describe('Notification Controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(HttpStatus.OK);
 
-      const body: Array<NotificationDTO> = response.body;
+      const body: NotificationFromUserDTO = response.body;
 
-      expect(body).toHaveLength(1);
-      expect(body.at(0)).toMatchObject({ userId: 1 });
+      expect(body.items).toHaveLength(1);
+      expect(body.items.at(0)).toMatchObject({ userId: 1 });
+      expect(body.meta).toMatchObject({
+        currentPage: 1,
+        totalPages: 1,
+        itemCount: 1,
+        itemsPerPage: 10,
+        totalItems: 1,
+      } satisfies IPaginationMeta);
     });
 
     it('not found', async () => {
@@ -179,9 +187,16 @@ describe('Notification Controller', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(HttpStatus.OK);
 
-      const body: Array<Notification> = response.body;
+      const body: NotificationFromUserDTO = response.body;
 
-      expect(body).toHaveLength(0);
+      expect(body.items).toHaveLength(0);
+      expect(body.meta).toMatchObject({
+        currentPage: 1,
+        totalPages: 0,
+        itemCount: 0,
+        itemsPerPage: 10,
+        totalItems: 0,
+      } satisfies IPaginationMeta);
     });
   });
 
