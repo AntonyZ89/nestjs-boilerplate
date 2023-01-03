@@ -17,14 +17,20 @@ describe('AppController (e2e)', () => {
 
   afterAll(async () => await app.close());
 
-  it('signup successfully - /auth/signup POST', () =>
-    req
-      .post('/auth/signup')
-      .send({ username: USERNAME, password: '123456' })
-      .expect(HttpStatus.CREATED));
+  /*
+   * /auth/signup POST
+   */
 
-  it('wrong body - /auth/signup POST', () =>
-    req.post('/auth/signup').expect(HttpStatus.BAD_REQUEST));
+  describe('/auth/signup POST', () => {
+    it('signup successfully', () =>
+      req
+        .post('/auth/signup')
+        .send({ username: USERNAME, password: '123456' })
+        .expect(HttpStatus.CREATED));
+
+    it('wrong body', () =>
+      req.post('/auth/signup').expect(HttpStatus.BAD_REQUEST));
+  });
 
   it('auth/login (POST)', async () => {
     const response = await req
@@ -37,6 +43,10 @@ describe('AppController (e2e)', () => {
     accessToken = body.access_token;
   });
 
+  /*
+   * profile (GET)
+   */
+
   it('profile (GET)', async () => {
     const response = await req
       .get('/profile')
@@ -48,28 +58,35 @@ describe('AppController (e2e)', () => {
     expect(body.username).toEqual(USERNAME);
   });
 
-  it('profile (PUT)', async () => {
-    // success
-    await req
-      .put('/profile')
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({ username: 'new_username' })
-      .expect(HttpStatus.OK);
+  /*
+   * profile PUT
+   */
 
-    const response = await req
-      .get('/profile')
-      .set('Authorization', `Bearer ${accessToken}`)
-      .expect(HttpStatus.OK);
+  describe('profile PUT', () => {
+    it('success', async () => {
+      const NEW_USERNAME = 'new_username';
 
-    const body: UserWithNotificationsDTO = response.body;
+      await req
+        .put('/profile')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ username: NEW_USERNAME })
+        .expect(HttpStatus.OK);
 
-    expect(body.username).toEqual('new_username');
+      const response = await req
+        .get('/profile')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(HttpStatus.OK);
 
-    // wrong
-    await req
-      .put('/profile')
-      .set('Authorization', `Bearer ${accessToken}`)
-      .send({ username: 'invalid-username' })
-      .expect(HttpStatus.BAD_REQUEST);
+      const body: UserWithNotificationsDTO = response.body;
+
+      expect(body.username).toEqual(NEW_USERNAME);
+    });
+
+    it('invalid username', () =>
+      req
+        .put('/profile')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ username: 'invalid-username' })
+        .expect(HttpStatus.BAD_REQUEST));
   });
 });
