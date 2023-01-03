@@ -1,5 +1,3 @@
-import { AppModule } from '@/app.module';
-import { generateValidationPipe } from '@helper/app.helper';
 import {
   CancelNotificationBody,
   CreateNotificationBody,
@@ -9,34 +7,27 @@ import {
   UnreadNotificationBody,
 } from '@infra/http/dtos';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
-import { useContainer } from 'class-validator';
 import * as request from 'supertest';
+import { createApp } from './helpers';
 
 describe('Notification Controller', () => {
-  let app: INestApplication;
-  let accessToken: string;
   const USERNAME = 'test_user';
 
+  let app: INestApplication;
+  let accessToken: string;
+  let req: request.SuperTest<request.Test>;
+
   beforeAll(async () => {
-    // init app
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+    app = await createApp();
 
-    app = moduleFixture.createNestApplication();
-
-    app.useGlobalPipes(generateValidationPipe());
-    useContainer(app.select(AppModule), { fallbackOnErrors: true });
-
-    await app.init();
+    req = request(app.getHttpServer());
 
     // create test user
-    await request(app.getHttpServer())
+    await req
       .post('/auth/signup')
       .send({ username: USERNAME, password: '123456' })
       .expect(HttpStatus.CREATED);
-    const response = await request(app.getHttpServer())
+    const response = await req
       .post('/auth/login')
       .send({ username: USERNAME, password: '123456' })
       .expect(HttpStatus.OK);
@@ -46,14 +37,14 @@ describe('Notification Controller', () => {
     accessToken = body.access_token;
   });
 
-  afterAll(() => app.close());
+  afterAll(async () => await app.close());
 
   /*
    * /notification GET
    */
 
   it('/notification GET', () =>
-    request(app.getHttpServer())
+    req
       .get('/notification')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.OK));
@@ -63,7 +54,7 @@ describe('Notification Controller', () => {
    */
 
   it('success - /notification POST', () =>
-    request(app.getHttpServer())
+    req
       .post('/notification')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
@@ -74,7 +65,7 @@ describe('Notification Controller', () => {
       .expect(HttpStatus.CREATED));
 
   it('invalid user id - /notification POST', () =>
-    request(app.getHttpServer())
+    req
       .post('/notification')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
@@ -85,7 +76,7 @@ describe('Notification Controller', () => {
       .expect(HttpStatus.BAD_REQUEST));
 
   it('invalid body - /notification POST', () =>
-    request(app.getHttpServer())
+    req
       .post('/notification')
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
@@ -99,7 +90,7 @@ describe('Notification Controller', () => {
    */
 
   it('success - /notification/:id/read PATCH', async () => {
-    const response = await request(app.getHttpServer())
+    const response = await req
       .patch('/notification/1/read')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.OK);
@@ -110,7 +101,7 @@ describe('Notification Controller', () => {
   });
 
   it('not found - /notification/:id/read PATCH', () =>
-    request(app.getHttpServer())
+    req
       .patch('/notification/2/read')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.NOT_FOUND));
@@ -120,7 +111,7 @@ describe('Notification Controller', () => {
    */
 
   it('success - /notification/:id/unread PATCH', async () => {
-    const response = await request(app.getHttpServer())
+    const response = await req
       .patch('/notification/1/unread')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.OK);
@@ -131,7 +122,7 @@ describe('Notification Controller', () => {
   });
 
   it('not found - /notification/:id/unread PATCH', () =>
-    request(app.getHttpServer())
+    req
       .patch('/notification/2/unread')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.NOT_FOUND));
@@ -141,7 +132,7 @@ describe('Notification Controller', () => {
    */
 
   it('success - /notification/:id/cancel PATCH', async () => {
-    const response = await request(app.getHttpServer())
+    const response = await req
       .patch('/notification/1/cancel')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.OK);
@@ -152,7 +143,7 @@ describe('Notification Controller', () => {
   });
 
   it('not found - /notification/:id/cancel PATCH', () =>
-    request(app.getHttpServer())
+    req
       .patch('/notification/2/cancel')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.NOT_FOUND));
@@ -162,7 +153,7 @@ describe('Notification Controller', () => {
    */
 
   it('success - /notification/from-user/:user_id GET', async () => {
-    const response = await request(app.getHttpServer())
+    const response = await req
       .get('/notification/from-user/1')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.OK);
@@ -174,7 +165,7 @@ describe('Notification Controller', () => {
   });
 
   it('not found - /notification/from-user/:user_id GET', async () => {
-    const response = await request(app.getHttpServer())
+    const response = await req
       .get('/notification/from-user/2')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.OK);
@@ -189,13 +180,13 @@ describe('Notification Controller', () => {
    */
 
   it('success - /notification/:id DELETE', () =>
-    request(app.getHttpServer())
+    req
       .delete('/notification/1')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.OK));
 
   it('not found - /notification/:id DELETE', () =>
-    request(app.getHttpServer())
+    req
       .delete('/notification/2')
       .set('Authorization', `Bearer ${accessToken}`)
       .expect(HttpStatus.NOT_FOUND));

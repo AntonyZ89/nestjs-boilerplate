@@ -19,8 +19,8 @@
     "test:staged": "jest --findRelatedTests --passWithNoTests",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:e2e:watch": "jest --watch --config ./test/jest-e2e.json",
+    "test:e2e": "jest --config ./test/jest-e2e.json --runInBand",
+    "test:e2e:watch": "jest --watch --config ./test/jest-e2e.json --runInBand",
     "prepare": "husky install"
   },
   "dependencies": {

@@ -3,6 +3,7 @@
   "moduleNameMapper": {
     "@infra/(.*)": "<rootDir>/../src/infra/$1",
     "@application/(.*)": "<rootDir>/../src/application/$1",
+    "@helper": "<rootDir>/../src/helper",
     "@helper/(.*)": "<rootDir>/../src/helper/$1",
     "@/(.*)": "<rootDir>/../src/$1",
     "~/(.*)": "<rootDir>/../$1"
