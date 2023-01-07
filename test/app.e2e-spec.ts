@@ -1,6 +1,6 @@
 import { LoginResponse, UserWithNotificationsDTO } from '@infra/http/dtos';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { createApp } from './helpers';
 
 describe('AppController (e2e)', () => {

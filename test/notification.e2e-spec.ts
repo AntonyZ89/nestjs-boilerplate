@@ -8,7 +8,7 @@ import {
 } from '@infra/http/dtos';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { IPaginationMeta } from 'nestjs-typeorm-paginate';
-import * as request from 'supertest';
+import request from 'supertest';
 import { createApp } from './helpers';
 
 describe('Notification Controller', () => {
