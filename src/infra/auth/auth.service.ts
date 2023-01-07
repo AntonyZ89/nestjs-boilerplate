@@ -5,6 +5,7 @@ import { LoginResponse } from '@infra/http/dtos/auth';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import ms from 'ms';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +32,7 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
-      // TODO add expiresIn param
+      expiresIn: new Date().getTime() + ms(process.env.JWT_EXPIRE_IN),
     };
   }
 }

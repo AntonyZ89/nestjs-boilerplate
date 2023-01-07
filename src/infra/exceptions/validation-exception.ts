@@ -8,7 +8,7 @@ export class ValidationException extends BadRequestException {
     const result: BadRequestResponse = Object.assign(
       {
         statusCode: HttpStatus.BAD_REQUEST,
-        message: 'Dados inválidos.',
+        message: 'Invalid data.',
       },
       objectOrError,
     );

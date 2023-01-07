@@ -29,7 +29,7 @@ export class Notification extends BaseEntity {
   id: number;
 
   @Column()
-  @ExistValidator(User)
+  @ExistValidator(User, { message: "User don't exists" })
   userId: number;
 
   @Column()

@@ -7,7 +7,8 @@ import {
   ValidatorConstraintInterface,
   registerDecorator,
 } from 'class-validator';
-import { BaseEntity, DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
+import { BaseEntity } from '@infra/database/typeorm/entities';
 
 type Param = typeof BaseEntity;
 

@@ -1,12 +1,8 @@
 import { ValidationException } from '@infra/exceptions';
 import { validate } from 'class-validator';
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  BaseEntity as TypeOrmBaseEntity,
-} from 'typeorm';
+import { BeforeInsert, BeforeUpdate } from 'typeorm';
 
-export abstract class BaseEntity extends TypeOrmBaseEntity {
+export abstract class BaseEntity {
   #errors: Record<string, string> = {};
 
   load(params: Partial<this>): void {
@@ -49,5 +45,9 @@ export abstract class BaseEntity extends TypeOrmBaseEntity {
 
   get hasErrors(): boolean {
     return Object.keys(this.#errors).length > 0;
+  }
+
+  hasId(): boolean {
+    return 'id' in this && !!this.id;
   }
 }
