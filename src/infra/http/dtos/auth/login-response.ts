@@ -8,5 +8,5 @@ export class LoginResponse {
   access_token: string;
 
   @ApiProperty({ example: '1673129009916' })
-  expiresIn: number;
+  expires_in: number;
 }

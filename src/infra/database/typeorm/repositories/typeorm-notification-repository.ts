@@ -8,6 +8,7 @@ import {
   Pagination,
   paginate,
 } from 'nestjs-typeorm-paginate';
+import { NotificationNotFound } from '@application/use-cases/errors';
 
 @Injectable()
 export class TypeOrmNotificationRepository implements NotificationRepository {
@@ -34,7 +35,15 @@ export class TypeOrmNotificationRepository implements NotificationRepository {
     notificationId: number,
     data: Partial<Notification>,
   ): Promise<void> {
-    await this.repository.update({ id: notificationId }, data);
+    const notification = await this.repository.findOneBy({
+      id: notificationId,
+    });
+
+    if (!notification) throw new NotificationNotFound();
+
+    notification.load(data);
+
+    await this.repository.update({ id: notificationId }, notification);
   }
 
   findByUserId(userId: number): Promise<Notification[]> {

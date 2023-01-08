@@ -14,7 +14,6 @@ import {
 @Injectable()
 export class TypeOrmUserRepository implements UserRepository {
   constructor(
-    // TypeORM base repository
     @InjectRepository(User)
     private repository: Repository<User>,
   ) {}
@@ -49,7 +48,7 @@ export class TypeOrmUserRepository implements UserRepository {
   }
 
   async save(userId: number, data: Partial<User>): Promise<void> {
-    const user = await this.repository.findOneByOrFail({ id: userId });
+    const user = await this.repository.findOneBy({ id: userId });
 
     if (!user) throw new UserNotFound();
 

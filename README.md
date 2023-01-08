@@ -122,13 +122,14 @@ $ npm run test:cov
 - [ ] Unit tests
   - [x] Use cases
   - [ ] Controllers
-  - [ ] Coverage 100%
+  - [ ] Coverage 100% (30%)
 - [x] e2e tests
+  - [x] Coverage 100% (96% is almost 100% 👌)
 - [x] Database constraints
 - [ ] Fix docker
   - [ ] Update README.md with docker steps
 - [ ] Run tests on Pull Requests
-- [ ] Resolve all TODOs
+- [ ] PR template
 
 ## Support
 

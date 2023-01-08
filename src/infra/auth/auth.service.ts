@@ -32,7 +32,7 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
-      expiresIn: new Date().getTime() + ms(process.env.JWT_EXPIRE_IN),
+      expires_in: new Date().getTime() + ms(process.env.JWT_EXPIRE_IN),
     };
   }
 }
