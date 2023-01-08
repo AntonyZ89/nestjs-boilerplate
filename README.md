@@ -51,6 +51,7 @@
 
   <img src="doc/prints/unique-response.png" alt="Unique validator response" />
   <img src="doc/prints/exist-response.png" alt="Exist validator response" />
+  <img src="doc/prints/invalid-response.png" alt="Exist validator response" />
 </details>
 
 <details>
