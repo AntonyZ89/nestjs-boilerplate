@@ -5,6 +5,7 @@ import { createApp } from './helpers';
 
 describe('AppController (e2e)', () => {
   const USERNAME = 'test_user';
+  const PASSWORD = '123456';
 
   let app: INestApplication;
   let accessToken: string;
@@ -25,22 +26,46 @@ describe('AppController (e2e)', () => {
     it('signup successfully', () =>
       req
         .post('/auth/signup')
-        .send({ username: USERNAME, password: '123456' })
+        .send({ username: USERNAME, password: PASSWORD })
         .expect(HttpStatus.CREATED));
 
     it('wrong body', () =>
       req.post('/auth/signup').expect(HttpStatus.BAD_REQUEST));
   });
 
-  it('auth/login (POST)', async () => {
-    const response = await req
-      .post('/auth/login')
-      .send({ username: USERNAME, password: '123456' })
-      .expect(HttpStatus.OK);
+  /*
+   * /auth/signup POST
+   */
 
-    const body: LoginResponse = response.body;
+  describe('auth/login (POST)', () => {
+    it('login successfully', async () => {
+      const response = await req
+        .post('/auth/login')
+        .send({ username: USERNAME, password: PASSWORD })
+        .expect(HttpStatus.OK);
 
-    accessToken = body.access_token;
+      const body: LoginResponse = response.body;
+
+      accessToken = body.access_token;
+    });
+
+    it('login failed with username not found', () =>
+      req
+        .post('/auth/login')
+        .send({
+          username: 'wrong_username',
+          password: 'wrong_password',
+        })
+        .expect(HttpStatus.UNAUTHORIZED));
+
+    it('login failed with wrong password', () =>
+      req
+        .post('/auth/login')
+        .send({
+          username: USERNAME,
+          password: 'wrong_password',
+        })
+        .expect(HttpStatus.UNAUTHORIZED));
   });
 
   /*
@@ -63,7 +88,27 @@ describe('AppController (e2e)', () => {
    */
 
   describe('profile PUT', () => {
-    it('success', async () => {
+    it('update password', async () => {
+      const NEW_PASSWORD = 'new_password';
+
+      // update password
+      await req
+        .put('/profile')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ password: NEW_PASSWORD })
+        .expect(HttpStatus.OK);
+
+      // auth again
+      await req
+        .post('/auth/login')
+        .send({
+          username: USERNAME,
+          password: NEW_PASSWORD,
+        })
+        .expect(HttpStatus.OK);
+    });
+
+    it('update username', async () => {
       const NEW_USERNAME = 'new_username';
 
       await req
