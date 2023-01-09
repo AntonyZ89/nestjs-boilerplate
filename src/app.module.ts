@@ -23,11 +23,11 @@ const env = process.env;
           password: env.POSTGRES_PASSWORD,
           database: env.POSTGRES_DB,
           autoLoadEntities: true,
-          synchronize: true,
         };
 
         if (isTest()) {
           options.dropSchema = true;
+          options.synchronize = true;
           options.database = env.POSTGRES_DB_TEST;
         }
 

@@ -20,7 +20,6 @@
   - Class validator
   - Custom validators for database constraints
   - TypeORM
-- ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 - ![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white)
 - ![Jest](https://img.shields.io/badge/-jest-%23C21325?style=for-the-badge&logo=jest&logoColor=white)
 - ![Husky](https://img.shields.io/badge/-husky-%23fff?style=for-the-badge)
@@ -72,6 +71,9 @@ $ cp .env.example .env
 ## Running the app
 
 ```bash
+# migrate database
+$ npm run migration:run
+
 # development
 $ npm run start
 
@@ -80,6 +82,19 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+```
+
+## Database
+
+```bash
+# migrate database
+$ npm run migration:run
+
+# revert last migration
+$ npm run migration:revert
+
+# generate migration
+$ npm run migration:generate
 ```
 
 ## Test
@@ -98,7 +113,7 @@ $ npm run test:cov
 ## Roadmap
 
 - [x] TypeORM
-- [ ] Migrations
+- [x] Migrations
 - [x] CRUD User
 - [x] CRUD Notification
 - [ ] JWT
