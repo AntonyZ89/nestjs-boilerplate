@@ -3,12 +3,14 @@ declare global {
     interface ProcessEnv {
       NODE_ENV: 'development' | 'production' | 'test';
 
-      POSTGRES_USER: string;
-      POSTGRES_PASSWORD: string;
-      POSTGRES_HOST: string;
-      POSTGRES_DB: string;
+      DB_TYPE: string;
+      DB_PORT: string | number;
+      DB_USER: string;
+      DB_PASSWORD: string;
+      DB_HOST: string;
+      DB_NAME: string;
 
-      POSTGRES_DB_TEST: string;
+      DB_TEST_NAME: string;
 
       JWT_SECRET: string;
       JWT_EXPIRE_IN: string;

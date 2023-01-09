@@ -15,20 +15,20 @@ const env = process.env;
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       useFactory: () => {
-        const options: Writeable<TypeOrmModuleOptions> = {
-          type: 'postgres',
-          host: env.POSTGRES_HOST,
-          port: 5432,
-          username: env.POSTGRES_USER,
-          password: env.POSTGRES_PASSWORD,
-          database: env.POSTGRES_DB,
+        const options = {
+          type: env.DB_TYPE,
+          host: env.DB_HOST,
+          port: Number(env.DB_PORT),
+          username: env.DB_USER,
+          password: env.DB_PASSWORD,
+          database: env.DB_NAME,
           autoLoadEntities: true,
-        };
+        } as Writeable<TypeOrmModuleOptions>;
 
         if (isTest()) {
           options.dropSchema = true;
           options.synchronize = true;
-          options.database = env.POSTGRES_DB_TEST;
+          options.database = env.DB_TEST_NAME;
         }
 
         return options;
