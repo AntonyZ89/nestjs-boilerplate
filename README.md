@@ -84,6 +84,16 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Docker
+
+```bash
+# run docker in background
+$ docker-compose up -d
+
+# run migrations
+$ docker-compose exec dev npm run migration:run
+```
+
 ## Database
 
 ```bash

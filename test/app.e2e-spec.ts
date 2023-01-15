@@ -81,6 +81,7 @@ describe('AppController (e2e)', () => {
     const body: UserWithNotificationsDTO = response.body;
 
     expect(body.username).toEqual(USERNAME);
+    expect(body.password).toBeUndefined();
   });
 
   /*
