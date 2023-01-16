@@ -84,6 +84,19 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## Docker
+
+1. change `DB_HOST` in .env to `DB_HOST=postgres`
+2. run:
+
+```bash
+# run docker in background
+$ docker-compose up -d
+
+# run migrations
+$ docker-compose exec dev npm run migration:run
+```
+
 ## Database
 
 ```bash
@@ -127,8 +140,8 @@ $ npm run test:cov
 - [x] e2e tests
   - [x] Coverage 100% (96% is almost 100% 👌)
 - [x] Database constraints
-- [ ] Fix docker
-  - [ ] Update README.md with docker steps
+- [x] Fix docker
+  - [x] Update README.md with docker steps
 - [ ] Run tests on Pull Requests
 - [ ] PR template
 

@@ -1,28 +1,60 @@
 version: '3.8'
-services:
-  nest-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: nest-api
-    restart: always
-    ports:
-      - 3000:3000
-    depends_on:
-      - nest-postgres
-    env_file:
-      - .env
 
-  nest-postgres:
-    image: postgres:14
-    container_name: nest-postgres
-    restart: always
-    ports:
-      - 5432:5432
-    env_file:
-      - .env
-    volumes:
-      - nest-postgres:/var/lib/postgresql/data
+services:
+    dev:
+        container_name: nestjs_api_dev
+        build:
+            context: .
+            target: development
+            dockerfile: Dockerfile
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        ports:
+            - ${PORT}:${PORT}
+            - 9229:9229
+        command: npm run start:debug
+        env_file:
+          - .env
+        networks:
+            - nesjs-network
+        restart: unless-stopped
+    postgres:
+      image: postgres:14
+      container_name: nest-postgres
+      volumes:
+        - nest-postgres:/var/lib/postgresql/data
+      env_file:
+        - .env
+      environment:
+          ALLOW_EMPTY_PASSWORD: 'no'
+          POSTGRES_USER: ${DB_USER}
+          POSTGRES_PASSWORD: ${DB_PASSWORD}
+          POSTGRES_DB: ${DB_NAME}
+      ports:
+        - "${DB_PORT}:5432"
+      networks:
+        - nesjs-network
+    prod:
+        container_name: nestjs_api_prod
+        build:
+            context: .
+            target: production
+            dockerfile: Dockerfile
+        env_file:
+          - .env
+        ports:
+            - ${PORT}:${PORT}
+            - 9229:9229
+        networks:
+            - nesjs-network
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        restart: unless-stopped
+
+networks:
+    nesjs-network:
 
 volumes:
   nest-postgres:
