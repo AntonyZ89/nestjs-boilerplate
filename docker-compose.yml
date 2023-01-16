@@ -20,17 +20,17 @@ services:
             - nesjs-network
         restart: unless-stopped
     postgres:
-      image: postgres:14
-      container_name: nest-postgres
+      image: postgres:15-alpine
+      container_name: nest-postgres-db
       volumes:
-        - nest-postgres:/var/lib/postgresql/data
+          - ./docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d
       env_file:
         - .env
       environment:
+          POSTGRES_MULTIPLE_DATABASES: "${DB_NAME},${DB_TEST_NAME}"
           ALLOW_EMPTY_PASSWORD: 'no'
           POSTGRES_USER: ${DB_USER}
           POSTGRES_PASSWORD: ${DB_PASSWORD}
-          POSTGRES_DB: ${DB_NAME}
       ports:
         - "${DB_PORT}:5432"
       networks:
@@ -45,7 +45,6 @@ services:
           - .env
         ports:
             - ${PORT}:${PORT}
-            - 9229:9229
         networks:
             - nesjs-network
         volumes:
