@@ -10,8 +10,7 @@ on:
     branches: [ "typeorm" ]
 
 jobs:
-  build:
-
+  postgres-jobs:
     runs-on: ubuntu-latest
 
     strategy:
@@ -19,14 +18,33 @@ jobs:
         node-version: [16.x, 18.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
+    services:
+      postgres:
+        image: postgres:14
+    env:
+      POSTGRES_USER: myapp
+      POSTGRES_PASSWORD: development
+      POSTGRES_DB: test
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
-    - run: npm tests:e2e
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build --if-present
+      - name: Wait for Postgres to be ready
+        run: |
+          while ! nc -z localhost 5432; do sleep 1; done
+      - name: Tests unit 
+        run: npm run test
+      - name: Tests e2e
+        run: npm run test:e2e
+        env: # same envs from [[.env.example]]
+          DB_TYPE: postgres
+          DB_PORT: 5432
+          DB_USER: myapp
+          DB_PASSWORD: development
+          DB_HOST: localhost
+          DB_TEST_NAME: test

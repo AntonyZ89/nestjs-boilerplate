@@ -97,6 +97,19 @@ $ docker-compose up -d
 $ docker-compose exec dev npm run migration:run
 ```
 
+- Run tests with docker
+
+```bash
+# up postgres service
+$ docker-compose up postgres
+
+# run unit tests
+$ docker-compose exec dev npm run test
+
+# run e2e tests
+$ docker-compose exec dev npm run test:e2e
+```
+
 ## Database
 
 ```bash
