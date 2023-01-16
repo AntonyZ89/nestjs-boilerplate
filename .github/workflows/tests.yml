@@ -58,3 +58,5 @@ jobs:
           DB_PASSWORD: development
           DB_HOST: localhost
           DB_TEST_NAME: test
+          JWT_SECRET: secretKey
+          JWT_EXPIRE_IN: 1h
