@@ -8,25 +8,22 @@ services:
             target: development
             dockerfile: Dockerfile
         volumes:
-            - /dist
-            - /node_modules
-            - ./:/app
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
         ports:
             - ${PORT}:${PORT}
             - 9229:9229
-        command: npm run start:dev
+        command: npm run start:debug
         env_file:
           - .env
         networks:
             - nesjs-network
-        depends_on:
-          - postgres
         restart: unless-stopped
     postgres:
       image: postgres:14
       container_name: nest-postgres
       volumes:
-        - ./ci-postgres-data:/var/lib/postgresql/data
+        - nest-postgres:/var/lib/postgresql/data
       env_file:
         - .env
       environment:
@@ -38,22 +35,27 @@ services:
         - "${DB_PORT}:5432"
       networks:
         - nesjs-network
-    # prod:
-        # container_name: nestjs_api_prod
-        # build:
-        #     context: .
-        #     target: production
-        #     dockerfile: Dockerfile
-        # command: npm run start:prod
-        # ports:
-        #     - 3000:3000
-        #     - 9229:9229
-        # networks:
-        #     - nesjs-network
-        # volumes:
-        #     - .:/app
-        #     - /app/node_modules
-        # restart: unless-stopped
+    prod:
+        container_name: nestjs_api_prod
+        build:
+            context: .
+            target: production
+            dockerfile: Dockerfile
+        env_file:
+          - .env
+        ports:
+            - ${PORT}:${PORT}
+            - 9229:9229
+        networks:
+            - nesjs-network
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        restart: unless-stopped
 
 networks:
     nesjs-network:
+
+volumes:
+  nest-postgres:
+    name: nest-postgres-db
