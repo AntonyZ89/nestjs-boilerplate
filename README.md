@@ -155,7 +155,7 @@ $ npm run test:cov
 - [x] Database constraints
 - [x] Fix docker
   - [x] Update README.md with docker steps
-- [ ] Run tests on Pull Requests
+- [x] Run tests on Pull Requests
 - [ ] PR template
 
 ## Support
